@@ -1,0 +1,15 @@
+{
+  "exclude": ["node_modules", "dist", "**/*.spec.ts"],
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "lib": ["es2015", "dom"],
+    "listFiles": true,
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "pretty": true,
+    "target": "es3"
+  }
+}

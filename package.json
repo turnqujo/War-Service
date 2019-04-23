@@ -1,0 +1,32 @@
+{
+  "name": "war",
+  "version": "1.0.0",
+  "description": "JavaScript implementation of the card game, War.",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "webpack",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/turnqujo/War.js.git"
+  },
+  "author": "Joseph Turnquist",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/turnqujo/War.js/issues"
+  },
+  "homepage": "https://github.com/turnqujo/War.js#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "jest": "^24.7.1",
+    "prettier-loader": "^2.1.1",
+    "prettier": "^1.17.0",
+    "ts-jest": "^24.0.2",
+    "ts-loader": "^5.4.3",
+    "tslint-loader": "^3.5.4",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.4"
+  }
+}
