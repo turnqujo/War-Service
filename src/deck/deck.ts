@@ -14,9 +14,12 @@ export class Deck implements IDeck {
   }
 
   public create(numberOfSuits: number, numberOfRanks: number): void {
-    if (numberOfSuits <= 0 || numberOfRanks <= 0) {
-      // TODO: Throw
-      return;
+    if (!this.numberIsValid(numberOfSuits)) {
+      throw "Number of Suits value is invalid.";
+    }
+
+    if (!this.numberIsValid(numberOfRanks)) {
+      throw "Number of Ranks value is invalid.";
     }
 
     for (let suit = 1; suit <= numberOfSuits; suit++) {
@@ -31,7 +34,7 @@ export class Deck implements IDeck {
 
     // NOTE: Used the Fisher-Yates Shuffle Algorithm
     // https://en.wikipedia.org/wiki/Fisher-Yates_shuffle
-    for (let i = this.currentDeck.length - 1; i > 0; i--) {
+    for (let i = shuffled.length - 1; i > 0; i--) {
       const roll = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[roll]] = [shuffled[roll], shuffled[i]];
     }
@@ -40,6 +43,13 @@ export class Deck implements IDeck {
   }
 
   public deal(): Card {
-    return this.currentDeck.length > 0 ? this.currentDeck.shift() : null;
+    if (this.currentDeck.length <= 0) {
+      throw "No cards left to deal out.";
+    }
+
+    return this.currentDeck.shift();
   }
+
+  private numberIsValid = (subject: number): boolean =>
+    typeof subject === "number" && subject % 1 === 0 && subject > 0;
 }

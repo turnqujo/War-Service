@@ -17,13 +17,19 @@ describe("The War Card Deck", () => {
     const deckHasEnoughCards = dealtDeck.every((x: Card) => x !== null);
 
     expect(deckHasEnoughCards).toBe(true);
-    expect(subject.deal()).toBe(null);
+
+    // NOTE: The entire deck should have been dealt by now, so dealing another card is impossible
+    expect(() => subject.deal()).toThrow();
   });
 
-  it("Should do nothing if given invalid input", () => {
+  it("Should throw if given invalid input", () => {
     const subject = new Deck();
-    subject.create(-100, 2);
-    expect(subject.deal()).toBe(null);
+    expect(() => subject.create(-100, 2)).toThrow();
+    expect(() => subject.create(4.5, 2)).toThrow();
+    expect(() => subject.create(4, -13)).toThrow();
+    expect(() => subject.create(4, 4.2)).toThrow();
+    expect(() => subject.create("4" as any, 4)).toThrow();
+    expect(() => subject.create("10asdf" as any, 2)).toThrow();
   });
 
   it("Should shuffle the deck", () => {
