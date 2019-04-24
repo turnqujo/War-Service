@@ -1,4 +1,4 @@
-import { Card } from "../card/card";
+import { Card } from '../card/card';
 
 export interface IDeck {
   create: (numberOfSuits: number, numberOfRanks: number) => void;
@@ -37,7 +37,7 @@ export class Deck implements IDeck {
 
   public deal(): Card {
     if (this.currentDeck.length <= 0) {
-      throw "No cards left to deal out.";
+      throw 'No cards left to deal out.';
     }
 
     return this.currentDeck.shift();
