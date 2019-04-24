@@ -27,13 +27,13 @@ describe('The War Card Deck', () => {
     subject.create(4, 13);
     const dealtDeck = Array(4 * 13)
       .fill(null)
-      .map((_: null) => subject.deal().getValue());
+      .map((_: null) => subject.deal().getRank());
 
     subject.create(4, 13);
     subject.shuffle();
     const shuffledDeck = Array(4 * 13)
       .fill(null)
-      .map((_: null) => subject.deal().getValue());
+      .map((_: null) => subject.deal().getRank());
 
     // NOTE: There's a very rare case where the deck will be shuffled,
     // but end up in the same order as it was originally. This has an extremely low chance with

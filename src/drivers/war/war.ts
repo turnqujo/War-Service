@@ -1,6 +1,7 @@
-import { isValidPositiveInt } from '../lib/validation';
-import { Deck } from '../deck/deck';
-import { Player } from '../player/player';
+import { CardPool, OwnedCard } from '../../card-pool/card-pool';
+import { isValidPositiveInt } from '../../lib/validation';
+import { Player } from '../../player/player';
+import * as warLogic from './war.logic';
 
 export interface IWar {
   play: (numberOfSuits: number, numberOfRanks: number, numberOfPlayers: number) => void;
@@ -32,34 +33,42 @@ export class War implements IWar {
       throw WarErrors.cannotSplitEvenly;
     }
 
-    const deck = this.setUpDeck(numberOfSuits, numberOfRanks);
-    const players = this.createPlayers(numberOfPlayers);
-
     console.log(`Starting a ${numCards}-card game of War with ${numberOfPlayers} players.`);
 
-    this.dealCardsToPlayers(deck, players, numCards / numberOfPlayers);
+    const deck = warLogic.createDeck(numberOfSuits, numberOfRanks);
+    const players = warLogic.createPlayers(numberOfPlayers);
+
+    warLogic.dealCardsToPlayers(deck, players, numCards / numberOfPlayers);
 
     this.reportHandSizes(players);
-  }
 
-  private setUpDeck(numberOfSuits: number, numberOfRanks: number): Deck {
-    const deck = new Deck();
-    deck.create(numberOfSuits, numberOfRanks);
-    deck.shuffle();
-    return deck;
-  }
+    let playersStillPlaying = players.slice();
+    while (playersStillPlaying.length > 1) {
+      const faceUpCards = new CardPool();
 
-  private readonly createPlayers = (numberOfPlayers: number): Player[] =>
-    Array(numberOfPlayers)
-      .fill(null)
-      .map((_: null, i: number) => new Player(`Player ${i + 1}`));
+      let turnEnded = false;
 
-  private readonly dealCardsToPlayers = (deck: Deck, players: Player[], cardsPerPlayer: number): void =>
-    players.forEach((player: Player) => {
-      for (let i = 0; i < cardsPerPlayer; i++) {
-        player.receiveCard(deck.deal());
+      for (let i = 0; i < playersStillPlaying.length; i++) {
+        const currentPlayer = playersStillPlaying[i];
+
+        try {
+          faceUpCards.acceptCard(currentPlayer.getName(), currentPlayer.playCard());
+        } catch (e) {
+          console.log(`${currentPlayer.getName()} has run out of cards!`);
+          playersStillPlaying = warLogic.removeLosingPlayerFromPool(playersStillPlaying, currentPlayer);
+          turnEnded = true;
+          break;
+        }
       }
-    });
+
+      if (turnEnded) {
+        this.reportHandSizes(playersStillPlaying);
+        continue;
+      }
+    }
+
+    console.log(`${playersStillPlaying[0].getName()} has won!`);
+  }
 
   private readonly reportHandSizes = (players: Player[]): void =>
     console.log(

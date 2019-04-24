@@ -6,8 +6,9 @@ describe('The War Card', () => {
     expect(subject).toBeTruthy();
   });
 
-  it('Should calculate, store, and return its value.', () => {
+  it('Should expose its properties safely.', () => {
     const subject = new Card(4, 5);
-    expect(subject.getValue()).toBe(20);
+    expect(subject.getSuit()).toBe(4);
+    expect(subject.getRank()).toBe(5);
   });
 });
