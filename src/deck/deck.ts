@@ -1,5 +1,4 @@
 import { Card } from "../card/card";
-import { isValidPositiveInt } from "../lib/validation";
 
 export interface IDeck {
   create: (numberOfSuits: number, numberOfRanks: number) => void;
@@ -15,17 +14,9 @@ export class Deck implements IDeck {
   }
 
   public create(numberOfSuits: number, numberOfRanks: number): void {
-    if (!isValidPositiveInt(numberOfSuits)) {
-      throw "Number of Suits value is invalid.";
-    }
-
-    if (!isValidPositiveInt(numberOfRanks)) {
-      throw "Number of Ranks value is invalid.";
-    }
-
+    this.currentDeck = [];
     for (let suit = 1; suit <= numberOfSuits; suit++) {
       for (let rank = 1; rank <= numberOfRanks; rank++) {
-        // NOTE: Suit and Rank have already been validated, no need to catch here
         this.currentDeck.push(new Card(suit, rank));
       }
     }
