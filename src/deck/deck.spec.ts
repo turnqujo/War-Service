@@ -25,11 +25,7 @@ describe("The War Card Deck", () => {
   it("Should throw if given invalid input", () => {
     const subject = new Deck();
     expect(() => subject.create(-100, 2)).toThrow();
-    expect(() => subject.create(4.5, 2)).toThrow();
     expect(() => subject.create(4, -13)).toThrow();
-    expect(() => subject.create(4, 4.2)).toThrow();
-    expect(() => subject.create("4" as any, 4)).toThrow();
-    expect(() => subject.create("10asdf" as any, 2)).toThrow();
   });
 
   it("Should shuffle the deck", () => {
@@ -37,13 +33,13 @@ describe("The War Card Deck", () => {
     subject.create(4, 13);
     const dealtDeck = Array(4 * 13)
       .fill(null)
-      .map((_: null) => subject.deal());
+      .map((_: null) => subject.deal().getValue());
 
     subject.create(4, 13);
     subject.shuffle();
     const shuffledDeck = Array(4 * 13)
       .fill(null)
-      .map((_: null) => subject.deal());
+      .map((_: null) => subject.deal().getValue());
 
     // NOTE: There's a very rare case where the deck will be shuffled,
     // but end up in the same order as it was originally. This has an extremely low chance with

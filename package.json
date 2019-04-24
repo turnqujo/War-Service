@@ -4,6 +4,7 @@
   "description": "JavaScript implementation of the card game, War.",
   "main": "src/index.ts",
   "scripts": {
+    "build": "tsc",
     "test": "jest"
   },
   "repository": {
