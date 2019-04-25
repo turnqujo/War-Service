@@ -6,12 +6,18 @@ export interface IDeck {
   deal: () => Card;
 }
 
+export enum DeckErrors {
+  noCardsLeft = 'No cards left to deal out.'
+}
+
 export class Deck implements IDeck {
   private currentDeck: Card[];
 
   constructor() {
     this.currentDeck = [];
   }
+
+  public getSize = (): number => this.currentDeck.length;
 
   public create(numberOfSuits: number, numberOfRanks: number): void {
     this.currentDeck = [];
@@ -37,7 +43,7 @@ export class Deck implements IDeck {
 
   public deal(): Card {
     if (this.currentDeck.length <= 0) {
-      throw 'No cards left to deal out.';
+      throw DeckErrors.noCardsLeft;
     }
 
     return this.currentDeck.shift();

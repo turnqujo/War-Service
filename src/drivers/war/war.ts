@@ -1,7 +1,7 @@
-import { CardPool, OwnedCard } from '../../card-pool/card-pool';
 import { isValidPositiveInt } from '../../lib/validation';
 import { Player } from '../../player/player';
 import * as warLogic from './war.logic';
+import { IOwnedCard } from '../../card/owned-card';
 
 export interface IWar {
   play: (numberOfSuits: number, numberOfRanks: number, numberOfPlayers: number) => void;
@@ -11,7 +11,8 @@ export enum WarErrors {
   invalidNumSuits = 'Invalid number of suits. Must be a positive integer.',
   invalidNumRanks = 'Invalid number of ranks. Must be a positive integer.',
   invalidNumPlayers = 'Invalid number of players. Must be a positive integer.',
-  cannotSplitEvenly = 'Cannot split the deck evenly between all players.'
+  cannotSplitEvenly = 'Cannot split the deck evenly between all players.',
+  missingCards = 'Missing cards.'
 }
 
 export class War implements IWar {
@@ -35,43 +36,66 @@ export class War implements IWar {
 
     console.log(`Starting a ${numCards}-card game of War with ${numberOfPlayers} players.`);
 
-    const deck = warLogic.createDeck(numberOfSuits, numberOfRanks);
-    const players = warLogic.createPlayers(numberOfPlayers);
+    const deck = warLogic.createShuffledDeck(numberOfSuits, numberOfRanks);
+    const roster = warLogic.createRoster(numberOfPlayers);
 
-    warLogic.dealCardsToPlayers(deck, players, numCards / numberOfPlayers);
+    warLogic.dealCardsToPlayers(deck, roster, numCards / numberOfPlayers);
 
-    this.reportHandSizes(players);
+    let turnNumber = 0;
+    let winningPlayer = null;
+    while (winningPlayer === null) {
+      turnNumber++;
+      console.log(this.handSizeMessage(roster, turnNumber));
 
-    let playersStillPlaying = players.slice();
-    while (playersStillPlaying.length > 1) {
-      const faceUpCards = new CardPool();
-
-      let turnEnded = false;
-
-      for (let i = 0; i < playersStillPlaying.length; i++) {
-        const currentPlayer = playersStillPlaying[i];
-
-        try {
-          faceUpCards.acceptCard(currentPlayer.getName(), currentPlayer.playCard());
-        } catch (e) {
-          console.log(`${currentPlayer.getName()} has run out of cards!`);
-          playersStillPlaying = warLogic.removeLosingPlayerFromPool(playersStillPlaying, currentPlayer);
-          turnEnded = true;
-          break;
-        }
+      const faceUpPool: IOwnedCard[] = warLogic.playCardsIntoPool([], roster);
+      if (faceUpPool.length === 1) {
+        // Only one card was played - that player has won
+        warLogic.awardCardsToPlayer(faceUpPool, faceUpPool[0].owner);
+        winningPlayer = faceUpPool[0].owner;
+        break;
       }
 
-      if (turnEnded) {
-        this.reportHandSizes(playersStillPlaying);
+      const winningCards = warLogic.findWinningCards(faceUpPool);
+      if (winningCards.length === 1) {
+        warLogic.awardCardsToPlayer(faceUpPool, winningCards[0].owner);
+        winningPlayer = warLogic.findWinningPlayer(roster);
         continue;
+      }
+
+      console.log(this.warDeclarationMessage(winningCards, turnNumber));
+      const warOutcome = warLogic.resolveWar(winningCards);
+
+      const losingCards = faceUpPool.filter(
+        (losingCard: IOwnedCard) =>
+          !winningCards.find((winningCard: IOwnedCard) => winningCard.owner.getName() === losingCard.owner.getName())
+      );
+
+      console.log(
+        `Didn't Battle: ${losingCards.map((losingCard: IOwnedCard) => losingCard.owner.getName()).join(', ')}`
+      );
+
+      warLogic.awardCardsToPlayer(warOutcome.spoils.concat(losingCards), warOutcome.winner);
+      winningPlayer = warLogic.findWinningPlayer(roster);
+
+      const cardsInHands = roster
+        .map((player: Player) => player.getHandSize())
+        .reduce((acc: number, curr: number) => (acc += curr));
+      if (cardsInHands !== numCards) {
+        console.log(this.handSizeMessage(roster, turnNumber));
+        throw WarErrors.missingCards;
       }
     }
 
-    console.log(`${playersStillPlaying[0].getName()} has won!`);
+    console.log(`${winningPlayer.getName()} has won on turn ${turnNumber}!`);
   }
 
-  private readonly reportHandSizes = (players: Player[]): void =>
-    console.log(
-      `Hand sizes:\n${players.map((player: Player) => `${player.getName()}:\t${player.getHandSize()}`).join('\n')}`
-    );
+  private readonly handSizeMessage = (roster: Player[], turnNumber: number): string =>
+    `Hand sizes for turn ${turnNumber}:\n${roster
+      .map((player: Player) => `${player.getName()}:\t${player.getHandSize()}`)
+      .join('\n')}`;
+
+  private readonly warDeclarationMessage = (conflictingCards: IOwnedCard[], turnNumber: number): string =>
+    `War declared on turn ${turnNumber}! Combatants:\n${conflictingCards
+      .map((ownedCard: IOwnedCard) => `${ownedCard.owner.getName()}`)
+      .join('\n')}`;
 }

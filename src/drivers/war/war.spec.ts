@@ -6,9 +6,14 @@ describe('The War driver program', () => {
     expect(subject).toBeTruthy();
   });
 
-  it('Should play a valid game', () => {
+  it('Should play a standard game', () => {
     const subject = new War();
     expect(() => subject.play(4, 13, 2)).not.toThrow();
+  });
+
+  it('Should play a non-standard game', () => {
+    const subject = new War();
+    expect(() => subject.play(8, 26, 4)).not.toThrow();
   });
 
   it('Should not accept invalid input', () => {

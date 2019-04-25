@@ -7,7 +7,13 @@ describe('The War Card Deck', () => {
     expect(subject).toBeTruthy();
   });
 
-  it('Should create a deck of at least a given size and no larger.', () => {
+  it('Should create a deck of the expected size.', () => {
+    const subject = new Deck();
+    subject.create(4, 13);
+    expect(subject.getSize()).toBe(52);
+  });
+
+  it('Should throw if asked to deal another card when all the cards in the deck have been dealt.', () => {
     const subject = new Deck();
     subject.create(4, 13);
 
