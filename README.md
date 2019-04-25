@@ -3,7 +3,7 @@
 ## Running the Game
 
 **This program requires Node to run.**
-After cloning and doing an `npm install`, the program can be run using `npm start` from a command line at the project directory.
+Start with an `npm install`, then the program can be run using `npm start` from a command line at the project directory.
 
 ## Running the Tests
 
