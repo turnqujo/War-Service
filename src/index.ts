@@ -11,7 +11,6 @@ const askForValidPositiveInt = (query: string): Promise<number> => {
   return new Promise((resolve, _reject) => {
     rl.question(query, (answer: string) => {
       const converted = +answer;
-      console.log(converted);
       if (isValidPositiveInt(converted)) {
         resolve(converted);
         return;
@@ -30,8 +29,9 @@ enum YesOrNo {
 const askForYesOrNo = (query: string): Promise<YesOrNo> => {
   return new Promise((resolve, _reject) => {
     rl.question(query, (answer: string) => {
-      if (answer === YesOrNo.yes || answer === YesOrNo.no) {
-        resolve(answer);
+      const loweredAnswer = answer.toLocaleLowerCase();
+      if (loweredAnswer === YesOrNo.yes || loweredAnswer === YesOrNo.no) {
+        resolve(loweredAnswer);
         return;
       }
 
@@ -56,7 +56,7 @@ const askForYesOrNo = (query: string): Promise<YesOrNo> => {
   const warGame = new War();
   warGame.play(numberOfSuits, numberOfRanks, numberOfPlayers);
 
-  const playAgain = await askForYesOrNo('Do you want to play again? ');
+  const playAgain = await askForYesOrNo('Do you want to play again? (yes / no) ');
   if (playAgain === YesOrNo.yes) {
     await main();
   }
