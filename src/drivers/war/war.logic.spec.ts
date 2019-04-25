@@ -1,59 +1,7 @@
-import { DeckErrors, Deck } from '../../deck/deck';
-import { Player } from '../../player/player';
-import * as warLogic from './war.logic';
 import { Card } from '../../card/card';
 import { IOwnedCard } from '../../card/owned-card';
-
-describe('Create deck war logic', () => {
-  it('Should create a deck', () => {
-    const subject = warLogic.createShuffledDeck(4, 13);
-    expect(subject.deal()).toBeTruthy();
-  });
-});
-
-describe('Create players war logic', () => {
-  it('Should create a collection of players', () => {
-    const subject = warLogic.createRoster(2);
-    expect(subject.length).toBe(2);
-  });
-
-  it('Should give the players unique names', () => {
-    const subject = warLogic.createRoster(4);
-    const duplicates = subject
-      .map((player: Player) => player.getName())
-      .reduce((duplicates: string[], current: string, i: number, names: string[]) => {
-        if (names.indexOf(current) !== i && duplicates.indexOf(current) === -1) {
-          duplicates.push(current);
-        }
-
-        return duplicates;
-      }, []);
-
-    expect(duplicates.length).toBe(0);
-  });
-});
-
-describe('Deal cards to players war logic', () => {
-  it('Should deal cards out to players', () => {
-    const deck = new Deck();
-    deck.create(4, 13);
-    const roster = [new Player('Player A'), new Player('Player B')];
-
-    expect(() => warLogic.dealCardsToPlayers(deck, roster, 26)).not.toThrow();
-
-    roster.forEach((player: Player) => {
-      expect(player.getHandSize()).toBe(26);
-    });
-  });
-
-  it('Should throw if asked to deal more cards than are available', () => {
-    const deck = new Deck();
-    deck.create(4, 13);
-    const roster = [new Player('Player A'), new Player('Player B')];
-
-    expect(() => warLogic.dealCardsToPlayers(deck, roster, 200)).toThrowError(DeckErrors.noCardsLeft);
-  });
-});
+import { Player } from '../../player/player';
+import * as warLogic from './war.logic';
 
 describe('Determining winning cards logic for War', () => {
   it('Should return a winning card out of a set of non-tied cards', () => {
@@ -291,9 +239,25 @@ describe('War resolution logic', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
 
+    // The cards which started the war
+    const playedCards: IOwnedCard[] = [
+      { owner: playerA, card: new Card(2, 10) },
+      { owner: playerB, card: new Card(1, 10) }
+    ];
+
     // Will be prize pool cards
     playerA.receiveCard(new Card(1, 2));
     playerB.receiveCard(new Card(3, 8));
+
+    // No more cards added; both players will run out of cards at the same time.
+
+    const result = warLogic.resolveWar(playedCards);
+    expect(result.spoils.length).toBe(4);
+  });
+
+  it('Should return a winner if a contender runs out of cards early', () => {
+    const playerA = new Player('Player A');
+    const playerB = new Player('Player B');
 
     // The cards which started the war
     const playedCards: IOwnedCard[] = [
@@ -302,11 +266,15 @@ describe('War resolution logic', () => {
     ];
 
     // Will be prize pool cards
-    playerA.receiveCard(new Card(2, 2));
-    playerB.receiveCard(new Card(4, 8));
+    playerA.receiveCard(new Card(1, 2));
+    playerB.receiveCard(new Card(3, 8));
+
+    // Only player B will have enough cards
+    playerB.receiveCard(new Card(2, 12));
 
     const result = warLogic.resolveWar(playedCards);
-    expect(result.spoils.length).toBe(6);
+    expect(result.winner.getName()).toBe(playerB.getName());
+    expect(result.spoils.length).toBe(5);
   });
 });
 

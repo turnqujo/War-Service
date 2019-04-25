@@ -13,7 +13,7 @@ describe('The War driver program', () => {
 
   it('Should play a non-standard game', () => {
     const subject = new War();
-    expect(() => subject.play(8, 26, 4)).not.toThrow();
+    expect(() => subject.play(12, 39, 6)).not.toThrow();
   });
 
   it('Should not accept invalid input', () => {
