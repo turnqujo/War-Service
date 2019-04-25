@@ -60,11 +60,8 @@ export class War implements IWar {
       }
 
       const warOutcome = warLogic.resolveWar(winningCards);
-
       const losingCards = warLogic.findLosingCards(faceUpPool, winningCards);
-      const winnings = warOutcome.spoils.concat(losingCards);
-
-      warLogic.awardCardsToPlayer(winnings, warOutcome.winner);
+      warLogic.awardCardsToPlayer(warOutcome.spoils.concat(losingCards), warOutcome.winner);
       winningPlayer = warLogic.findWinningPlayer(roster);
     }
 

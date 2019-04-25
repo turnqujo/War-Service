@@ -11,9 +11,14 @@ describe('The War driver program', () => {
     expect(() => subject.play(4, 13, 2)).not.toThrow();
   });
 
-  it('Should play a non-standard game', () => {
+  it('Should handle playing a game with the minimum possible values', () => {
     const subject = new War();
-    expect(() => subject.play(12, 39, 6)).not.toThrow();
+    expect(() => subject.play(1, 1, 1)).not.toThrow();
+  });
+
+  it('Should be able to play a game with lots of players', () => {
+    const subject = new War();
+    expect(() => subject.play(12, 39, 12)).not.toThrow();
   });
 
   it('Should not accept invalid input', () => {
