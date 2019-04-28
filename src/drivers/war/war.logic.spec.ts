@@ -1,14 +1,10 @@
-import { Card } from '../../card/card';
-import { IOwnedCard } from '../../card/owned-card';
+import { Card } from '../../models/card';
 import { Player } from '../../player/player';
 import * as warLogic from './war.logic';
 
 describe('Determining winning cards logic for War', () => {
   it('Should return a winning card out of a set of non-tied cards', () => {
-    const playedCards: IOwnedCard[] = [
-      { owner: new Player('Player A'), card: new Card(2, 10) },
-      { owner: new Player('Player B'), card: new Card(2, 8) }
-    ];
+    const playedCards: Card[] = [{ owner: 'Player A', suit: 2, rank: 10 }, { owner: 'Player B', suit: 2, rank: 8 }];
 
     const result = warLogic.findWinningCards(playedCards);
     expect(result.length).toBe(1);
@@ -16,32 +12,29 @@ describe('Determining winning cards logic for War', () => {
   });
 
   it('Should return multiple winning cards if there is a tie', () => {
-    const playedCards: IOwnedCard[] = [
-      { owner: new Player('Player A'), card: new Card(2, 8) },
-      { owner: new Player('Player B'), card: new Card(2, 8) }
-    ];
+    const playedCards: Card[] = [{ owner: 'Player A', suit: 2, rank: 8 }, { owner: 'Player B', suit: 1, rank: 8 }];
 
     const result = warLogic.findWinningCards(playedCards);
     expect(result.length).toBe(2);
   });
 
   it('Should return one winning card, even if there is a lower-value tie', () => {
-    const playedCards: IOwnedCard[] = [
-      { owner: new Player('Player A'), card: new Card(1, 10) },
-      { owner: new Player('Player B'), card: new Card(2, 8) },
-      { owner: new Player('Player C'), card: new Card(3, 8) }
+    const playedCards: Card[] = [
+      { owner: 'Player A', suit: 1, rank: 10 },
+      { owner: 'Player B', suit: 2, rank: 8 },
+      { owner: 'Player C', suit: 3, rank: 8 }
     ];
 
     const result = warLogic.findWinningCards(playedCards);
     expect(result.length).toBe(1);
-    expect(result[0].card.getRank()).toBe(10);
+    expect(result[0].rank).toBe(10);
   });
 
   it('Should be able to handle n-way ties', () => {
-    const playedCards: IOwnedCard[] = [
-      { owner: new Player('Player A'), card: new Card(2, 8) },
-      { owner: new Player('Player B'), card: new Card(2, 8) },
-      { owner: new Player('Player C'), card: new Card(2, 8) }
+    const playedCards: Card[] = [
+      { owner: 'Player A', suit: 1, rank: 8 },
+      { owner: 'Player B', suit: 2, rank: 8 },
+      { owner: 'Player C', suit: 3, rank: 8 }
     ];
 
     const result = warLogic.findWinningCards(playedCards);
@@ -49,14 +42,14 @@ describe('Determining winning cards logic for War', () => {
   });
 
   it('Should handle a one-player situation (they win)', () => {
-    const playedCards: IOwnedCard[] = [{ owner: new Player('Player A'), card: new Card(2, 8) }];
+    const playedCards: Card[] = [{ owner: 'Player A', suit: 1, rank: 8 }];
 
     const result = warLogic.findWinningCards(playedCards);
     expect(result.length).toBe(1);
   });
 
   it('Should return an empty array if given an empty array', () => {
-    const playedCards: IOwnedCard[] = [];
+    const playedCards: Card[] = [];
 
     expect(() => {
       const result = warLogic.findWinningCards(playedCards);
@@ -71,21 +64,21 @@ describe('War resolution logic', () => {
     const playerB = new Player('Player B');
 
     // Will be prize pool cards
-    playerA.receiveCard(new Card(1, 2));
-    playerB.receiveCard(new Card(3, 8));
+    playerA.takeWithOwnership({ suit: 1, rank: 2 });
+    playerB.takeWithOwnership({ suit: 2, rank: 8 });
 
     // The cards which will be played in battle
-    playerA.receiveCard(new Card(1, 1));
-    playerB.receiveCard(new Card(2, 10));
+    playerA.takeWithOwnership({ suit: 1, rank: 1 });
+    playerB.takeWithOwnership({ suit: 2, rank: 10 });
 
     // The cards which started the war
-    const playedCards: IOwnedCard[] = [
-      { owner: playerA, card: new Card(2, 10) },
-      { owner: playerB, card: new Card(1, 10) }
+    const playedCards: Card[] = [
+      { owner: playerA.name, suit: 1, rank: 10 },
+      { owner: playerB.name, suit: 2, rank: 10 }
     ];
 
-    const result = warLogic.resolveWar(playedCards);
-    expect(result.winner.getName()).toBe(playerB.getName());
+    const result = warLogic.resolveWar(playedCards, [playerA, playerB]);
+    expect(result.winner.name).toBe(playerB.name);
     expect(result.spoils.length).toBe(6);
   });
 
@@ -95,24 +88,24 @@ describe('War resolution logic', () => {
     const playerC = new Player('Player C');
 
     // Will be prize pool cards
-    playerA.receiveCard(new Card(1, 2));
-    playerB.receiveCard(new Card(3, 8));
-    playerC.receiveCard(new Card(3, 4));
+    playerA.takeWithOwnership({ suit: 1, rank: 2 });
+    playerB.takeWithOwnership({ suit: 2, rank: 8 });
+    playerC.takeWithOwnership({ suit: 3, rank: 4 });
 
     // The cards which will be played in battle
-    playerA.receiveCard(new Card(1, 1));
-    playerB.receiveCard(new Card(2, 10));
-    playerC.receiveCard(new Card(2, 8));
+    playerA.takeWithOwnership({ suit: 1, rank: 3 });
+    playerB.takeWithOwnership({ suit: 2, rank: 6 });
+    playerC.takeWithOwnership({ suit: 3, rank: 5 });
 
     // The cards which started the war
-    const playedCards: IOwnedCard[] = [
-      { owner: playerA, card: new Card(2, 10) },
-      { owner: playerB, card: new Card(1, 10) },
-      { owner: playerC, card: new Card(3, 10) }
+    const playedCards: Card[] = [
+      { owner: playerA.name, suit: 1, rank: 10 },
+      { owner: playerB.name, suit: 2, rank: 10 },
+      { owner: playerC.name, suit: 3, rank: 10 }
     ];
 
-    const result = warLogic.resolveWar(playedCards);
-    expect(result.winner.getName()).toBe(playerB.getName());
+    const result = warLogic.resolveWar(playedCards, [playerA, playerB, playerC]);
+    expect(result.winner.name).toBe(playerB.name);
     expect(result.spoils.length).toBe(9);
   });
 
@@ -122,30 +115,30 @@ describe('War resolution logic', () => {
 
     // BATTLE # 1
     // Will be prize pool cards
-    playerA.receiveCard(new Card(1, 2));
-    playerB.receiveCard(new Card(3, 8));
+    playerA.takeWithOwnership({ suit: 1, rank: 2 });
+    playerB.takeWithOwnership({ suit: 2, rank: 8 });
 
     // The cards which will be played in battle
-    playerA.receiveCard(new Card(1, 1));
-    playerB.receiveCard(new Card(2, 1));
+    playerA.takeWithOwnership({ suit: 1, rank: 3 });
+    playerB.takeWithOwnership({ suit: 2, rank: 3 });
 
     // BATTLE # 2
     // Will be prize pool cards
-    playerA.receiveCard(new Card(1, 4));
-    playerB.receiveCard(new Card(3, 6));
+    playerA.takeWithOwnership({ suit: 3, rank: 10 });
+    playerB.takeWithOwnership({ suit: 4, rank: 1 });
 
     // The cards which will be played in battle
-    playerA.receiveCard(new Card(1, 1));
-    playerB.receiveCard(new Card(2, 7));
+    playerA.takeWithOwnership({ suit: 1, rank: 2 });
+    playerB.takeWithOwnership({ suit: 2, rank: 7 });
 
     // The cards which started the war
-    const playedCards: IOwnedCard[] = [
-      { owner: playerA, card: new Card(2, 10) },
-      { owner: playerB, card: new Card(1, 10) }
+    const playedCards: Card[] = [
+      { owner: playerA.name, suit: 1, rank: 10 },
+      { owner: playerB.name, suit: 2, rank: 10 }
     ];
 
-    const result = warLogic.resolveWar(playedCards);
-    expect(result.winner.getName()).toBe(playerB.getName());
+    const result = warLogic.resolveWar(playedCards, [playerA, playerB]);
+    expect(result.winner.name).toBe(playerB.name);
     expect(result.spoils.length).toBe(10);
   });
 
@@ -156,35 +149,35 @@ describe('War resolution logic', () => {
 
     // BATTLE # 1
     // Will be prize pool cards
-    playerA.receiveCard(new Card(1, 2));
-    playerB.receiveCard(new Card(3, 8));
-    playerC.receiveCard(new Card(4, 8));
+    playerA.takeWithOwnership({ suit: 1, rank: 2 });
+    playerB.takeWithOwnership({ suit: 2, rank: 8 });
+    playerC.takeWithOwnership({ suit: 3, rank: 8 });
 
     // The cards which will be played in battle
-    playerA.receiveCard(new Card(1, 1));
-    playerB.receiveCard(new Card(2, 1));
-    playerC.receiveCard(new Card(4, 1));
+    playerA.takeWithOwnership({ suit: 1, rank: 1 });
+    playerB.takeWithOwnership({ suit: 2, rank: 1 });
+    playerC.takeWithOwnership({ suit: 3, rank: 1 });
 
     // BATTLE # 2
     // Will be prize pool cards
-    playerA.receiveCard(new Card(1, 4));
-    playerB.receiveCard(new Card(3, 6));
-    playerC.receiveCard(new Card(4, 3));
+    playerA.takeWithOwnership({ suit: 1, rank: 3 });
+    playerB.takeWithOwnership({ suit: 2, rank: 3 });
+    playerC.takeWithOwnership({ suit: 3, rank: 3 });
 
     // The cards which will be played in battle
-    playerA.receiveCard(new Card(1, 1));
-    playerB.receiveCard(new Card(2, 7));
-    playerC.receiveCard(new Card(4, 4));
+    playerA.takeWithOwnership({ suit: 1, rank: 4 });
+    playerB.takeWithOwnership({ suit: 2, rank: 7 });
+    playerC.takeWithOwnership({ suit: 3, rank: 2 });
 
     // The cards which started the war
-    const playedCards: IOwnedCard[] = [
-      { owner: playerA, card: new Card(2, 10) },
-      { owner: playerB, card: new Card(1, 10) },
-      { owner: playerC, card: new Card(3, 10) }
+    const playedCards: Card[] = [
+      { owner: playerA.name, suit: 1, rank: 10 },
+      { owner: playerB.name, suit: 2, rank: 10 },
+      { owner: playerC.name, suit: 3, rank: 10 }
     ];
 
-    const result = warLogic.resolveWar(playedCards);
-    expect(result.winner.getName()).toBe(playerB.getName());
+    const result = warLogic.resolveWar(playedCards, [playerA, playerB, playerC]);
+    expect(result.winner.name).toBe(playerB.name);
     expect(result.spoils.length).toBe(15);
   });
 
@@ -195,33 +188,33 @@ describe('War resolution logic', () => {
 
     // BATTLE # 1
     // Will be prize pool cards
-    playerA.receiveCard(new Card(1, 2));
-    playerB.receiveCard(new Card(3, 8));
-    playerC.receiveCard(new Card(4, 8));
+    playerA.takeWithOwnership({ suit: 1, rank: 3 });
+    playerB.takeWithOwnership({ suit: 2, rank: 8 });
+    playerC.takeWithOwnership({ suit: 3, rank: 8 });
 
     // The cards which will be played in battle
-    playerA.receiveCard(new Card(1, 2));
-    playerB.receiveCard(new Card(2, 2));
-    playerC.receiveCard(new Card(4, 1));
+    playerA.takeWithOwnership({ suit: 1, rank: 2 });
+    playerB.takeWithOwnership({ suit: 2, rank: 2 });
+    playerC.takeWithOwnership({ suit: 3, rank: 1 });
 
     // BATTLE # 2
     // Will be prize pool cards
-    playerA.receiveCard(new Card(1, 4));
-    playerB.receiveCard(new Card(3, 6));
+    playerA.takeWithOwnership({ suit: 1, rank: 4 });
+    playerB.takeWithOwnership({ suit: 2, rank: 4 });
 
     // The cards which will be played in battle
-    playerA.receiveCard(new Card(1, 1));
-    playerB.receiveCard(new Card(2, 7));
+    playerA.takeWithOwnership({ suit: 1, rank: 1 });
+    playerB.takeWithOwnership({ suit: 2, rank: 7 });
 
     // The cards which started the war
-    const playedCards: IOwnedCard[] = [
-      { owner: playerA, card: new Card(2, 10) },
-      { owner: playerB, card: new Card(1, 10) },
-      { owner: playerC, card: new Card(3, 10) }
+    const playedCards: Card[] = [
+      { owner: playerA.name, suit: 1, rank: 10 },
+      { owner: playerB.name, suit: 2, rank: 10 },
+      { owner: playerC.name, suit: 3, rank: 10 }
     ];
 
-    const result = warLogic.resolveWar(playedCards);
-    expect(result.winner.getName()).toBe(playerB.getName());
+    const result = warLogic.resolveWar(playedCards, [playerA, playerB, playerC]);
+    expect(result.winner.name).toBe(playerB.name);
     expect(result.spoils.length).toBe(13);
   });
 
@@ -240,18 +233,18 @@ describe('War resolution logic', () => {
     const playerB = new Player('Player B');
 
     // The cards which started the war
-    const playedCards: IOwnedCard[] = [
-      { owner: playerA, card: new Card(2, 10) },
-      { owner: playerB, card: new Card(1, 10) }
+    const playedCards: Card[] = [
+      { owner: playerA.name, suit: 1, rank: 10 },
+      { owner: playerB.name, suit: 2, rank: 10 }
     ];
 
     // Will be prize pool cards
-    playerA.receiveCard(new Card(1, 2));
-    playerB.receiveCard(new Card(3, 8));
+    playerA.takeWithOwnership({ suit: 1, rank: 4 });
+    playerB.takeWithOwnership({ suit: 2, rank: 7 });
 
     // No more cards added; both players will run out of cards at the same time.
 
-    const result = warLogic.resolveWar(playedCards);
+    const result = warLogic.resolveWar(playedCards, [playerA, playerB]);
     expect(result.spoils.length).toBe(4);
   });
 
@@ -260,38 +253,56 @@ describe('War resolution logic', () => {
     const playerB = new Player('Player B');
 
     // The cards which started the war
-    const playedCards: IOwnedCard[] = [
-      { owner: playerA, card: new Card(2, 10) },
-      { owner: playerB, card: new Card(1, 10) }
+    const playedCards: Card[] = [
+      { owner: playerA.name, suit: 1, rank: 10 },
+      { owner: playerB.name, suit: 2, rank: 10 }
     ];
 
     // Will be prize pool cards
-    playerA.receiveCard(new Card(1, 2));
-    playerB.receiveCard(new Card(3, 8));
+    playerA.takeWithOwnership({ suit: 1, rank: 4 });
+    playerB.takeWithOwnership({ suit: 2, rank: 7 });
 
     // Only player B will have enough cards
-    playerB.receiveCard(new Card(2, 12));
+    playerB.takeWithOwnership({ suit: 2, rank: 8 });
 
-    const result = warLogic.resolveWar(playedCards);
-    expect(result.winner.getName()).toBe(playerB.getName());
+    const result = warLogic.resolveWar(playedCards, [playerA, playerB]);
+    expect(result.winner.name).toBe(playerB.name);
     expect(result.spoils.length).toBe(5);
   });
 });
 
 describe('Victory condition logic for War', () => {
   it('Should return the winning player if there is only one player left', () => {
-    expect(warLogic.findWinningPlayer([new Player('Player A')])).not.toBeNull();
+    expect(warLogic.checkForVictory([new Player('Player A')])).not.toBeNull();
   });
 
   it('Should return the winning player if they are the only one with cards left', () => {
     const player = new Player('I am gonna win!');
-    player.receiveCard(new Card(4, 2));
+    player.takeWithOwnership({ suit: 4, rank: 2 });
     const roster = [player, new Player('I am out of cards!')];
 
-    expect(warLogic.findWinningPlayer(roster)).toEqual(player);
+    expect(warLogic.checkForVictory(roster)).toEqual(player);
   });
 
   it('Should throw if given an empty roster', () => {
-    expect(() => warLogic.findWinningPlayer([])).toThrowError(warLogic.findWinningPlayerErrors.emptyRoster);
+    expect(() => warLogic.checkForVictory([])).toThrowError(warLogic.checkForVictoryErrors.emptyRoster);
+  });
+});
+
+describe('Awarding cards to a player', () => {
+  it('Should award cards to a player without altering ownership', () => {
+    const subject = new Player('I won!');
+    const prizes: Card[] = [
+      { owner: 'Other Player', suit: 1, rank: 1 },
+      { owner: 'Someone Else', suit: 1, rank: 1 },
+      { owner: subject.name, suit: 1, rank: 1 }
+    ];
+
+    warLogic.awardCardsToPlayer(prizes, subject);
+
+    prizes.forEach((prize: Card) => {
+      const playedCard: Card = { ...prize, playedBy: subject.name };
+      expect(subject.playCard()).toEqual(playedCard);
+    });
   });
 });

@@ -1,4 +1,4 @@
-import { Card } from '../card/card';
+import { Card } from '../models/card';
 
 export interface IDeck {
   create: (numberOfSuits: number, numberOfRanks: number) => void;
@@ -23,7 +23,7 @@ export class Deck implements IDeck {
     this.currentDeck = [];
     for (let suit = 1; suit <= numberOfSuits; suit++) {
       for (let rank = 1; rank <= numberOfRanks; rank++) {
-        this.currentDeck.push(new Card(suit, rank));
+        this.currentDeck.push({ suit, rank });
       }
     }
   }

@@ -1,41 +1,59 @@
 import { Player, PlayerErrors } from './player';
-import { Card } from '../card/card';
+import { Card } from '../models/card';
 
 describe('The Player', () => {
-  it('Should at least exist.', () => {
-    const subject = new Player('Some Player');
-    expect(subject).toBeTruthy();
+  it('Should attach its name as the last player to a card when it is played.', () => {
+    const subject = new Player('Player A');
+    subject.receiveCard({ suit: 1, rank: 1, owner: 'Player B', playedBy: 'Player B' });
+    expect(subject.playCard()).toEqual({ suit: 1, rank: 1, owner: 'Player B', playedBy: subject.name });
   });
 
   it('Should accept and return cards in first-in-first-out order.', () => {
-    const subject = new Player('Some Player');
-    const exampleCards = [new Card(1, 2), new Card(4, 5), new Card(4, 10)];
+    const subject = new Player('Player A');
+    const exampleCards: Card[] = [{ owner: 'Player B', suit: 1, rank: 1 }, { suit: 1, rank: 2 }];
+    exampleCards.forEach((card: Card) => subject.receiveCard(card));
 
-    exampleCards.forEach((card: Card) => {
-      subject.receiveCard(card);
-    });
-
-    exampleCards.forEach((card: Card) => {
+    const expectedCards: Card[] = [
+      { suit: 1, rank: 1, owner: 'Player B', playedBy: subject.name },
+      { suit: 1, rank: 2, playedBy: subject.name }
+    ];
+    expectedCards.forEach((card: Card) => {
       expect(subject.playCard()).toEqual(card);
     });
   });
 
-  it('Should throw if asked to play a card with none left', () => {
+  it('Should take ownership of a given card if asked, and return them in first-in-first-out order.', () => {
     const subject = new Player('Some Player');
-    subject.receiveCard(new Card(1, 1));
+    const exampleCards: Card[] = [{ suit: 1, rank: 1 }, { suit: 1, rank: 2 }, { suit: 1, rank: 3 }];
+    exampleCards.forEach((card: Card) => subject.takeWithOwnership(card));
+
+    const expectedCards: Card[] = [
+      { suit: 1, rank: 1, owner: subject.name, playedBy: subject.name },
+      { suit: 1, rank: 2, owner: subject.name, playedBy: subject.name }
+    ];
+    expectedCards.forEach((card: Card) => {
+      expect(subject.playCard()).toEqual(card);
+    });
+  });
+
+  it('Should throw if asked to take ownership of an owned card.', () => {
+    const subject = new Player('Player A');
+    expect(() => subject.takeWithOwnership({ rank: 1, suit: 1, owner: 'Player B' })).toThrowError(
+      PlayerErrors.alreadyOwned
+    );
+  });
+
+  it('Should throw if asked to play a card with none left in hand.', () => {
+    const subject = new Player('Some Player');
+    subject.receiveCard({ suit: 1, rank: 1 });
     subject.playCard();
     expect(() => subject.playCard()).toThrowError(PlayerErrors.outOfCards);
   });
 
-  it('Should expose the number of cards it has in hand', () => {
+  it('Should expose the number of cards it has in hand.', () => {
     const subject = new Player('Some Player');
-    subject.receiveCard(new Card(1, 1));
-    subject.receiveCard(new Card(1, 2));
+    subject.receiveCard({ suit: 1, rank: 1 });
+    subject.receiveCard({ suit: 1, rank: 2 });
     expect(subject.getHandSize()).toBe(2);
-  });
-
-  it('Should give its name when asked', () => {
-    const subject = new Player('Some Player');
-    expect(subject.getName()).toBe('Some Player');
   });
 });

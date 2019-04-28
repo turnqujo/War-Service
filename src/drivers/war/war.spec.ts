@@ -21,6 +21,16 @@ describe('The War driver program', () => {
     expect(() => subject.play(12, 39, 12)).not.toThrow();
   });
 
+  it('Should play a game which only has wars.', () => {
+    const subject = new War();
+    expect(() => subject.play(52, 1, 2)).not.toThrow();
+  });
+
+  it('Should play a game which cannot have wars.', () => {
+    const subject = new War();
+    expect(() => subject.play(1, 52, 2)).not.toThrow();
+  });
+
   it('Should not accept invalid input', () => {
     const subject = new War();
     expect(() => subject.play('asdf' as any, 13, 2)).toThrowError(WarErrors.invalidNumSuits);

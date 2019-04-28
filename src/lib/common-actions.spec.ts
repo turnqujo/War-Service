@@ -18,7 +18,7 @@ describe('Create a Roster of Players', () => {
   it('Should give the players unique names', () => {
     const subject = commonActions.createRoster(4);
     const duplicates = subject
-      .map((player: Player) => player.getName())
+      .map((player: Player) => player.name)
       .reduce((duplicates: string[], current: string, i: number, names: string[]) => {
         if (names.indexOf(current) !== i && duplicates.indexOf(current) === -1) {
           duplicates.push(current);

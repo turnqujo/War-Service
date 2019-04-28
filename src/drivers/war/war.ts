@@ -1,6 +1,6 @@
-import { IOwnedCard } from '../../card/owned-card';
 import * as commonActions from '../../lib/common-actions';
 import { isValidPositiveInt } from '../../lib/validation';
+import { Card } from '../../models/card';
 import * as warLogic from './war.logic';
 
 export interface IWar {
@@ -11,7 +11,12 @@ export enum WarErrors {
   invalidNumSuits = 'Invalid number of suits. Must be a positive integer.',
   invalidNumRanks = 'Invalid number of ranks. Must be a positive integer.',
   invalidNumPlayers = 'Invalid number of players. Must be a positive integer.',
-  cannotSplitEvenly = 'Cannot split the deck evenly between all players.'
+  cannotSplitEvenly = 'Cannot split the deck evenly between all players.',
+  missingCards = 'Missing cards',
+  missingRemainingPlayer = 'Could not find remaining player by name',
+  missingUncontestedWinner = 'Could not find uncontested player by name',
+  missingContender = 'Could not find contender by name',
+  missingWarWinner = 'Could not find war winner player by name'
 }
 
 export class War implements IWar {
@@ -44,27 +49,60 @@ export class War implements IWar {
     while (winningPlayer === null) {
       turnNumber++;
 
-      const faceUpPool: IOwnedCard[] = warLogic.playCardsIntoPool([], roster);
+      const faceUpPool: Card[] = warLogic.playCardsIntoPool([], roster);
       if (faceUpPool.length === 1) {
         // Only one card was played - that player has won
-        warLogic.awardCardsToPlayer(faceUpPool, faceUpPool[0].owner);
-        winningPlayer = faceUpPool[0].owner;
+
+        let remainingPlayer;
+        try {
+          remainingPlayer = warLogic.findPlayerByName(roster, faceUpPool[0].playedBy);
+        } catch (_) {
+          throw WarErrors.missingRemainingPlayer;
+        }
+
+        warLogic.awardCardsToPlayer(faceUpPool, remainingPlayer);
+        winningPlayer = remainingPlayer;
         break;
       }
 
       const winningCards = warLogic.findWinningCards(faceUpPool);
       if (winningCards.length === 1) {
-        warLogic.awardCardsToPlayer(faceUpPool, winningCards[0].owner);
-        winningPlayer = warLogic.findWinningPlayer(roster);
+        // Multiple cards were played, but only one winner
+        let uncontestedWinner;
+        try {
+          uncontestedWinner = warLogic.findPlayerByName(roster, winningCards[0].playedBy);
+        } catch (_) {
+          throw WarErrors.missingUncontestedWinner;
+        }
+
+        warLogic.awardCardsToPlayer(faceUpPool, uncontestedWinner);
+        winningPlayer = warLogic.checkForVictory(roster);
         continue;
       }
 
-      const warOutcome = warLogic.resolveWar(winningCards);
+      const contenders = winningCards.map((winner: Card) => {
+        try {
+          return warLogic.findPlayerByName(roster, winner.playedBy);
+        } catch (_) {
+          throw WarErrors.missingContender;
+        }
+      });
+
+      const warOutcome = warLogic.resolveWar(winningCards, contenders);
+      if (!warOutcome.winner) {
+        throw WarErrors.missingWarWinner;
+      }
+
       const losingCards = warLogic.findLosingCards(faceUpPool, winningCards);
       warLogic.awardCardsToPlayer(warOutcome.spoils.concat(losingCards), warOutcome.winner);
-      winningPlayer = warLogic.findWinningPlayer(roster);
+
+      winningPlayer = warLogic.checkForVictory(roster);
     }
 
-    console.log(`${winningPlayer.getName()} has won on turn ${turnNumber}!`);
+    if (winningPlayer.getHandSize() !== numCards) {
+      throw WarErrors.missingCards;
+    }
+
+    console.log(`${winningPlayer.name} has won on turn ${turnNumber}!`);
   }
 }
