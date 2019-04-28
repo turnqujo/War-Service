@@ -3,7 +3,7 @@
 ## Running the Game
 
 **This program requires Node to run.**
-After cloning and doing an `npm install`, the program can be run using `npm start` from a command line at the project directory.
+Start with an `npm install`, then the program can be run using `npm start` from a command line at the project directory.
 
 ## Running the Tests
 
@@ -75,8 +75,6 @@ This means that both players 2 and 3 are able to put their last cards in the pri
 #### Resolution
 
 In order to break the tie, I wrote in a simple mechanism which will select a winner at random from the war participants. In such a case, one player will be out of the game, while the winner will have won their cards, allowing the game to continue.
-
-- If multiple players enter a war, battles will continue until one player is left standing.
 
 ## What's War Logic?
 
