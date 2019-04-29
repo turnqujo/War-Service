@@ -1,4 +1,4 @@
-import { Card } from '../models/card';
+import { Card } from '../card/card';
 
 export enum PlayerErrors {
   alreadyOwned = 'Cannot accept ownership of an already owned card.',
@@ -12,7 +12,7 @@ export class Player {
     this.hand = [];
   }
 
-  public getHandSize = (): number => this.hand.length;
+  public getHand = (): Card[] => this.hand.slice();
 
   public takeWithOwnership(card: Card): void {
     if (!!card.owner) {

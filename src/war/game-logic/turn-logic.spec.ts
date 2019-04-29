@@ -1,62 +1,6 @@
-import { Card } from '../../../models/card';
-import { Player } from '../../../player/player';
-import * as warLogic from './war.logic';
-
-describe('Determining winning cards logic for War', () => {
-  it('Should return a winning card out of a set of non-tied cards', () => {
-    const playedCards: Card[] = [{ owner: 'Player A', suit: 2, rank: 10 }, { owner: 'Player B', suit: 2, rank: 8 }];
-
-    const result = warLogic.findWinningCards(playedCards);
-    expect(result.length).toBe(1);
-    expect(result[0]).toEqual(playedCards[0]);
-  });
-
-  it('Should return multiple winning cards if there is a tie', () => {
-    const playedCards: Card[] = [{ owner: 'Player A', suit: 2, rank: 8 }, { owner: 'Player B', suit: 1, rank: 8 }];
-
-    const result = warLogic.findWinningCards(playedCards);
-    expect(result.length).toBe(2);
-  });
-
-  it('Should return one winning card, even if there is a lower-value tie', () => {
-    const playedCards: Card[] = [
-      { owner: 'Player A', suit: 1, rank: 10 },
-      { owner: 'Player B', suit: 2, rank: 8 },
-      { owner: 'Player C', suit: 3, rank: 8 }
-    ];
-
-    const result = warLogic.findWinningCards(playedCards);
-    expect(result.length).toBe(1);
-    expect(result[0].rank).toBe(10);
-  });
-
-  it('Should be able to handle n-way ties', () => {
-    const playedCards: Card[] = [
-      { owner: 'Player A', suit: 1, rank: 8 },
-      { owner: 'Player B', suit: 2, rank: 8 },
-      { owner: 'Player C', suit: 3, rank: 8 }
-    ];
-
-    const result = warLogic.findWinningCards(playedCards);
-    expect(result.length).toBe(3);
-  });
-
-  it('Should handle a one-player situation (they win)', () => {
-    const playedCards: Card[] = [{ owner: 'Player A', suit: 1, rank: 8 }];
-
-    const result = warLogic.findWinningCards(playedCards);
-    expect(result.length).toBe(1);
-  });
-
-  it('Should return an empty array if given an empty array', () => {
-    const playedCards: Card[] = [];
-
-    expect(() => {
-      const result = warLogic.findWinningCards(playedCards);
-      expect(result.length).toBe(0);
-    }).not.toThrow();
-  });
-});
+import { Card } from '../../common/card/card';
+import { Player } from '../../common/player/player';
+import { resolveWar } from './turn-logic';
 
 describe('War resolution logic', () => {
   it('Should return a winner with the correct spoils', () => {
@@ -77,8 +21,8 @@ describe('War resolution logic', () => {
       { owner: playerB.name, suit: 2, rank: 10 }
     ];
 
-    const result = warLogic.resolveWar(playedCards, [playerA, playerB]);
-    expect(result.winner.name).toBe(playerB.name);
+    const result = resolveWar(playedCards, [playerA, playerB]);
+    expect(result.winner).toBe(playerB.name);
     expect(result.spoils.length).toBe(6);
   });
 
@@ -104,8 +48,8 @@ describe('War resolution logic', () => {
       { owner: playerC.name, suit: 3, rank: 10 }
     ];
 
-    const result = warLogic.resolveWar(playedCards, [playerA, playerB, playerC]);
-    expect(result.winner.name).toBe(playerB.name);
+    const result = resolveWar(playedCards, [playerA, playerB, playerC]);
+    expect(result.winner).toBe(playerB.name);
     expect(result.spoils.length).toBe(9);
   });
 
@@ -137,8 +81,8 @@ describe('War resolution logic', () => {
       { owner: playerB.name, suit: 2, rank: 10 }
     ];
 
-    const result = warLogic.resolveWar(playedCards, [playerA, playerB]);
-    expect(result.winner.name).toBe(playerB.name);
+    const result = resolveWar(playedCards, [playerA, playerB]);
+    expect(result.winner).toBe(playerB.name);
     expect(result.spoils.length).toBe(10);
   });
 
@@ -176,8 +120,8 @@ describe('War resolution logic', () => {
       { owner: playerC.name, suit: 3, rank: 10 }
     ];
 
-    const result = warLogic.resolveWar(playedCards, [playerA, playerB, playerC]);
-    expect(result.winner.name).toBe(playerB.name);
+    const result = resolveWar(playedCards, [playerA, playerB, playerC]);
+    expect(result.winner).toBe(playerB.name);
     expect(result.spoils.length).toBe(15);
   });
 
@@ -213,8 +157,8 @@ describe('War resolution logic', () => {
       { owner: playerC.name, suit: 3, rank: 10 }
     ];
 
-    const result = warLogic.resolveWar(playedCards, [playerA, playerB, playerC]);
-    expect(result.winner.name).toBe(playerB.name);
+    const result = resolveWar(playedCards, [playerA, playerB, playerC]);
+    expect(result.winner).toBe(playerB.name);
     expect(result.spoils.length).toBe(13);
   });
 
@@ -244,7 +188,7 @@ describe('War resolution logic', () => {
 
     // No more cards added; both players will run out of cards at the same time.
 
-    const result = warLogic.resolveWar(playedCards, [playerA, playerB]);
+    const result = resolveWar(playedCards, [playerA, playerB]);
     expect(result.spoils.length).toBe(4);
   });
 
@@ -265,44 +209,8 @@ describe('War resolution logic', () => {
     // Only player B will have enough cards
     playerB.takeWithOwnership({ suit: 2, rank: 8 });
 
-    const result = warLogic.resolveWar(playedCards, [playerA, playerB]);
-    expect(result.winner.name).toBe(playerB.name);
+    const result = resolveWar(playedCards, [playerA, playerB]);
+    expect(result.winner).toBe(playerB.name);
     expect(result.spoils.length).toBe(5);
-  });
-});
-
-describe('Victory condition logic for War', () => {
-  it('Should return the winning player if there is only one player left', () => {
-    expect(warLogic.checkForVictory([new Player('Player A')])).not.toBeNull();
-  });
-
-  it('Should return the winning player if they are the only one with cards left', () => {
-    const player = new Player('I am gonna win!');
-    player.takeWithOwnership({ suit: 4, rank: 2 });
-    const roster = [player, new Player('I am out of cards!')];
-
-    expect(warLogic.checkForVictory(roster)).toEqual(player);
-  });
-
-  it('Should throw if given an empty roster', () => {
-    expect(() => warLogic.checkForVictory([])).toThrowError(warLogic.checkForVictoryErrors.emptyRoster);
-  });
-});
-
-describe('Awarding cards to a player', () => {
-  it('Should award cards to a player without altering ownership', () => {
-    const subject = new Player('I won!');
-    const prizes: Card[] = [
-      { owner: 'Other Player', suit: 1, rank: 1 },
-      { owner: 'Someone Else', suit: 1, rank: 1 },
-      { owner: subject.name, suit: 1, rank: 1 }
-    ];
-
-    warLogic.awardCardsToPlayer(prizes, subject);
-
-    prizes.forEach((prize: Card) => {
-      const playedCard: Card = { ...prize, playedBy: subject.name };
-      expect(subject.playCard()).toEqual(playedCard);
-    });
   });
 });

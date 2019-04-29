@@ -1,4 +1,4 @@
-import { isValidPositiveInt } from "../../../lib/validation";
+import { isPositiveWholeNumber } from "../../common/validation/validation";
 
 export enum WarOptionValidationError {
   invalidSuitCount = 'Number of suits must be a positive integer.',
@@ -8,15 +8,15 @@ export enum WarOptionValidationError {
 }
 
 export const validateWarOptions = (numberOfSuits: number, numberOfRanks: number, numberOfPlayers: number): WarOptionValidationError => {
-  if (!isValidPositiveInt(numberOfSuits)) {
+  if (!isPositiveWholeNumber(numberOfSuits)) {
     return WarOptionValidationError.invalidSuitCount;
   }
 
-  if (!isValidPositiveInt(numberOfRanks)) {
+  if (!isPositiveWholeNumber(numberOfRanks)) {
     return WarOptionValidationError.invalidRankCount;
   }
 
-  if (!isValidPositiveInt(numberOfPlayers)) {
+  if (!isPositiveWholeNumber(numberOfPlayers)) {
     return WarOptionValidationError.invalidPlayerCount;
   }
 

@@ -1,5 +1,5 @@
 import { playWar } from './war';
-import { WarOptionValidationError } from './lib/options-validation';
+import { WarOptionValidationError } from './validation/options-validation';
 
 describe('The War driver program', () => {
   it('Should play a standard game', () => {

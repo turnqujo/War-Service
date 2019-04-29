@@ -1,6 +1,6 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
+import { validateWarOptions } from '../validation/options-validation';
 import { playWar } from '../war';
-import { validateWarOptions } from '../lib/options-validation';
 
 const warRouter = Router();
 
@@ -15,12 +15,10 @@ warRouter.get('/', (request: Request, response: Response) => {
   }
 
   try {
-    playWar(suits, ranks, players);
+    response.status(200).send(playWar(suits, ranks, players));
   } catch (errorMsg) {
     return response.status(400).send({ error: errorMsg });
   }
-
-  response.status(200).send();
 });
 
 export default warRouter;

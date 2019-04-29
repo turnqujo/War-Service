@@ -1,16 +1,10 @@
-import { Card } from '../models/card';
-
-export interface IDeck {
-  create: (numberOfSuits: number, numberOfRanks: number) => void;
-  shuffle: () => void;
-  deal: () => Card;
-}
+import { Card } from '../card/card';
 
 export enum DeckErrors {
   noCardsLeft = 'No cards left to deal out.'
 }
 
-export class Deck implements IDeck {
+export class Deck {
   private currentDeck: Card[];
 
   constructor() {

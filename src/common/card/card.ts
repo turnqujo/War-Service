@@ -8,9 +8,6 @@ export interface Card {
    */
   readonly owner?: string;
 
-  /**
-   * 'Played By' refers to the last player to play the card.
-   * This does not necessarily match the owner.
-   */
+  // 'Played By' refers to the last player to play the card.
   readonly playedBy?: string;
 }

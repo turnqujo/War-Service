@@ -1,11 +1,10 @@
-import * as supertest from 'supertest';
 import * as express from 'express';
+import * as supertest from 'supertest';
+import { WarOptionValidationError } from '../validation/options-validation';
 import warRouter from './war.router';
-import { WarOptionValidationError } from '../lib/options-validation';
 
 describe('The router for War', () => {
-  const fakeApp = express();
-  fakeApp.use(warRouter);
+  const fakeApp = express().use(warRouter);
 
   it('Should return a bad request when given an invalid suit count.', () =>
     supertest(fakeApp).get('/?suits=invalid-input&ranks=13&players=2').then((response: supertest.Response) => {

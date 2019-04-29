@@ -1,5 +1,5 @@
+import { Card } from '../card/card';
 import { Deck } from './deck';
-import { Card } from '../models/card';
 
 describe('The War Card Deck', () => {
   it('Should at least exist.', () => {

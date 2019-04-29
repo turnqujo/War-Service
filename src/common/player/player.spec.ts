@@ -54,6 +54,23 @@ describe('The Player', () => {
     const subject = new Player('Some Player');
     subject.receiveCard({ suit: 1, rank: 1 });
     subject.receiveCard({ suit: 1, rank: 2 });
-    expect(subject.getHandSize()).toBe(2);
+    expect(subject.getHand().length).toBe(2);
+  });
+
+  it('Should return a copy of its hand.', () => {
+    const subject = new Player('Player A');
+    const expectedCards: Card[] = [
+      { suit: 1, rank: 1, owner: subject.name },
+      { suit: 1, rank: 2, owner: subject.name }
+    ];
+    expectedCards.forEach((card: Card) => subject.receiveCard(card));
+
+    const hand = subject.getHand();
+    expect(hand).toEqual(expectedCards);
+
+    hand.push({ suit: 9, rank: 9 });
+
+    // The actual hand of the subject should be unafected by changes to the returned array
+    expect(subject.getHand()).toEqual(expectedCards);
   });
 });
