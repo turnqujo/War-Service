@@ -1,6 +1,6 @@
-import { Card } from '../../models/card';
-import { Player } from '../../player/player';
-import { WarOutcome } from './models/war-outcome';
+import { Card } from '../../../models/card';
+import { Player } from '../../../player/player';
+import { WarOutcome } from '../models/war-outcome';
 
 export const findWinningCards = (playedCards: Card[]): Card[] =>
   playedCards

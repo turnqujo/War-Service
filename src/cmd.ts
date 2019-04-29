@@ -1,6 +1,6 @@
 import * as readline from 'readline';
+import { playWar } from './drivers/war/war';
 import { isValidPositiveInt } from './lib/validation';
-import { War } from './drivers/war/war';
 
 let rl = readline.createInterface({
   input: process.stdin,
@@ -53,8 +53,7 @@ const askForYesOrNo = (query: string): Promise<YesOrNo> => {
     return;
   }
 
-  const warGame = new War();
-  warGame.play(numberOfSuits, numberOfRanks, numberOfPlayers);
+  playWar(numberOfSuits, numberOfRanks, numberOfPlayers);
 
   const playAgain = await askForYesOrNo('Do you want to play again? (yes / no) ');
   if (playAgain === YesOrNo.yes) {

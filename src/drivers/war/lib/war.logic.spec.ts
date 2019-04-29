@@ -1,5 +1,5 @@
-import { Card } from '../../models/card';
-import { Player } from '../../player/player';
+import { Card } from '../../../models/card';
+import { Player } from '../../../player/player';
 import * as warLogic from './war.logic';
 
 describe('Determining winning cards logic for War', () => {
