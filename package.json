@@ -2,10 +2,10 @@
   "name": "war",
   "version": "1.0.0",
   "description": "JavaScript implementation of the card game War.",
-  "main": "src/index.ts",
+  "main": "index.ts",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "cmd": "ts-node src/cmd.ts",
+    "start": "ts-node index.ts",
+    "cmd": "ts-node cmd.ts",
     "test": "jest"
   },
   "repository": {

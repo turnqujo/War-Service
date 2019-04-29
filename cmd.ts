@@ -1,6 +1,6 @@
 import * as readline from 'readline';
-import { playWar } from './drivers/war/war';
-import { isValidPositiveInt } from './lib/validation';
+import { playWar } from './src/drivers/war/war';
+import { isValidPositiveInt } from './src/lib/validation';
 
 let rl = readline.createInterface({
   input: process.stdin,

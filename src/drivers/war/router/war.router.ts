@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { playWar } from './war';
-import { validateWarOptions } from './lib/options-validation';
+import { playWar } from '../war';
+import { validateWarOptions } from '../lib/options-validation';
 
 const warRouter = Router();
 

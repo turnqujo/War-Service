@@ -1,7 +1,7 @@
 import * as supertest from 'supertest';
 import * as express from 'express';
 import warRouter from './war.router';
-import { WarOptionValidationError } from './lib/options-validation';
+import { WarOptionValidationError } from '../lib/options-validation';
 
 describe('The router for War', () => {
   const fakeApp = express();
