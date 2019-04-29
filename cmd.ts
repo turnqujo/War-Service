@@ -1,6 +1,6 @@
 import * as readline from 'readline';
-import { playWar } from './src/drivers/war/war';
-import { isValidPositiveInt } from './src/lib/validation';
+import { playWar } from './src/war/war';
+import { isPositiveWholeNumber } from './src/common/validation/validation';
 
 let rl = readline.createInterface({
   input: process.stdin,
@@ -11,7 +11,7 @@ const askForValidPositiveInt = (query: string): Promise<number> => {
   return new Promise((resolve, _reject) => {
     rl.question(query, (answer: string) => {
       const converted = +answer;
-      if (isValidPositiveInt(converted)) {
+      if (isPositiveWholeNumber(converted)) {
         resolve(converted);
         return;
       }

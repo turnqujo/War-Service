@@ -1,5 +1,5 @@
 import * as express from 'express';
-import warRouter from './src/drivers/war/router/war.router';
+import warRouter from './src/war/router/war.router';
 
 express()
   .use('/war', warRouter)
