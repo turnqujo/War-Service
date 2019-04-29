@@ -17,7 +17,7 @@ const askForValidPositiveInt = (query: string): Promise<number> => {
       }
 
       console.log('Please insert a positive integer.');
-      askForValidPositiveInt(query);
+      resolve(askForValidPositiveInt(query));
     });
   });
 };
@@ -36,7 +36,7 @@ const askForYesOrNo = (query: string): Promise<YesOrNo> => {
       }
 
       console.log("Please insert 'yes' or 'no'");
-      askForYesOrNo(query);
+      resolve(askForYesOrNo(query));
     });
   });
 };
@@ -53,7 +53,8 @@ const askForYesOrNo = (query: string): Promise<YesOrNo> => {
     return;
   }
 
-  playWar(numberOfSuits, numberOfRanks, numberOfPlayers);
+  const result = playWar(numberOfSuits, numberOfRanks, numberOfPlayers);
+  console.log(`${result.winner} has won!`);
 
   const playAgain = await askForYesOrNo('Do you want to play again? (yes / no) ');
   if (playAgain === YesOrNo.yes) {
