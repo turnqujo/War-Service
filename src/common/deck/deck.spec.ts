@@ -2,18 +2,18 @@ import { Card } from '../card/card';
 import { Deck } from './deck';
 
 describe('The War Card Deck', () => {
-  it('Should at least exist.', () => {
+  test('Should at least exist.', () => {
     const subject = new Deck();
     expect(subject).toBeTruthy();
   });
 
-  it('Should create a deck of the expected size.', () => {
+  test('Should create a deck of the expected size.', () => {
     const subject = new Deck();
     subject.create(4, 13);
     expect(subject.getSize()).toBe(52);
   });
 
-  it('Should throw if asked to deal another card when all the cards in the deck have been dealt.', () => {
+  test('Should throw if asked to deal another card when all the cards in the deck have been dealt.', () => {
     const subject = new Deck();
     subject.create(4, 13);
 
@@ -28,7 +28,7 @@ describe('The War Card Deck', () => {
     expect(() => subject.deal()).toThrow();
   });
 
-  it('Should shuffle the deck.', () => {
+  test('Should shuffle the deck.', () => {
     const subject = new Deck();
     subject.create(4, 13);
     const dealtDeck = Array(4 * 13)
@@ -46,7 +46,7 @@ describe('The War Card Deck', () => {
     expect(dealtDeck).not.toEqual(shuffledDeck);
   });
 
-  it('Should clear an existing deck before creating a new one', () => {
+  test('Should clear an existing deck before creating a new one', () => {
     const subject = new Deck();
     subject.create(4, 5);
     subject.create(4, 5);

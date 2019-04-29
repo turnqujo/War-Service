@@ -23,22 +23,24 @@ export const resolveWar = (contestedCards: Card[], contenders: Player[]): Confli
 
   if (faceUpPool.length === 1) {
     // Only one card was played - that player has won
-    try {
-      const winner = findPlayerByName(contenders, faceUpPool[0].playedBy).name;
-      return { winner, spoils: prizePool.concat(faceUpPool) };
-    } catch (_) {
+    const winner = findPlayerByName(contenders, faceUpPool[0].playedBy).name;
+    if (winner === null) {
       throw 'Could not find the winner by exhaustion contender by name';
     }
+
+    return { winner, spoils: prizePool.concat(faceUpPool) };
   }
 
   const winningCards = findWinningCards(faceUpPool);
   if (winningCards.length > 1) {
-    let remainingContenders: Player[];
-    try {
-      remainingContenders = winningCards.map((card: Card) => findPlayerByName(contenders, card.playedBy));
-    } catch (_) {
-      throw 'Could not find a remaining contender by name';
-    }
+    const remainingContenders: Player[] = winningCards.map((card: Card) => {
+      const foundPlayer = findPlayerByName(contenders, card.playedBy);
+      if (foundPlayer === null) {
+        throw 'Could not find a remaining contender by name';
+      }
+
+      return foundPlayer;
+    });
 
     const eventualWinner = resolveWar(winningCards, remainingContenders);
     const losingCards = findLosingCards(faceUpPool, winningCards);
@@ -46,10 +48,10 @@ export const resolveWar = (contestedCards: Card[], contenders: Player[]): Confli
     return eventualWinner;
   }
 
-  try {
-    const winner = findPlayerByName(contenders, winningCards[0].playedBy).name;
-    return { winner, spoils: prizePool.concat(faceUpPool) };
-  } catch (_) {
+  const winner = findPlayerByName(contenders, winningCards[0].playedBy).name;
+  if (winner === null) {
     throw 'Could not find battle winner by name';
   }
+
+  return { winner, spoils: prizePool.concat(faceUpPool) };
 };

@@ -3,7 +3,7 @@ import { Player } from '../../common/player/player';
 import { resolveWar } from './turn-logic';
 
 describe('War resolution logic', () => {
-  it('Should return a winner with the correct spoils', () => {
+  test('Should return a winner with the correct spoils', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
 
@@ -26,7 +26,7 @@ describe('War resolution logic', () => {
     expect(result.spoils.length).toBe(6);
   });
 
-  it('Should handle 3+ player wars', () => {
+  test('Should handle 3+ player wars', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
     const playerC = new Player('Player C');
@@ -53,7 +53,7 @@ describe('War resolution logic', () => {
     expect(result.spoils.length).toBe(9);
   });
 
-  it('Should handle multi-battle wars', () => {
+  test('Should handle multi-battle wars', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
 
@@ -86,7 +86,7 @@ describe('War resolution logic', () => {
     expect(result.spoils.length).toBe(10);
   });
 
-  it('Should handle multi-battle, many-player wars', () => {
+  test('Should handle multi-battle, many-player wars', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
     const playerC = new Player('Player C');
@@ -125,7 +125,7 @@ describe('War resolution logic', () => {
     expect(result.spoils.length).toBe(15);
   });
 
-  it('Should handle multi-battle, many-player wars where one player loses early', () => {
+  test('Should handle multi-battle, many-player wars where one player loses early', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
     const playerC = new Player('Player C');
@@ -162,7 +162,7 @@ describe('War resolution logic', () => {
     expect(result.spoils.length).toBe(13);
   });
 
-  it('Should return a random winner if all contenders do not have enough cards to battle', () => {
+  test('Should return a random winner if all contenders do not have enough cards to battle', () => {
     /**
      * NOTE: This could legitimately happen:
      * - Four player game
@@ -192,7 +192,7 @@ describe('War resolution logic', () => {
     expect(result.spoils.length).toBe(4);
   });
 
-  it('Should return a winner if a contender runs out of cards early', () => {
+  test('Should return a winner if a contender runs out of cards early', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
 

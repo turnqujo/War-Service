@@ -3,7 +3,7 @@ import { buildHandLookup } from './reporting';
 import { HandLookup } from './turn-outcome';
 
 describe('Building the hand lookup', () => {
-  it('Should construct a dictionary of player name to an array of cards', () => {
+  test('Should construct a dictionary of player name to an array of cards', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
 

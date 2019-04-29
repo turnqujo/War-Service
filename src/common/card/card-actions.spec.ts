@@ -4,7 +4,7 @@ import { Card } from './card';
 import { dealCardsToPlayers, giveCardsToPlayer } from './card-actions';
 
 describe('Deal cards to players', () => {
-  it('Should deal cards out to players', () => {
+  test('Should deal cards out to players', () => {
     const deck = new Deck();
     deck.create(4, 13);
     const roster = [new Player('Player A'), new Player('Player B')];
@@ -16,7 +16,7 @@ describe('Deal cards to players', () => {
     });
   });
 
-  it('Should throw if asked to deal more cards than are available', () => {
+  test('Should throw if asked to deal more cards than are available', () => {
     const deck = new Deck();
     deck.create(4, 13);
     const roster = [new Player('Player A'), new Player('Player B')];
@@ -26,7 +26,7 @@ describe('Deal cards to players', () => {
 });
 
 describe('Giving cards to a player', () => {
-  it('Should give cards to a player without altering ownership', () => {
+  test('Should give cards to a player without altering ownership', () => {
     const subject = new Player('I won!');
     const prizes: Card[] = [
       { owner: 'Other Player', suit: 1, rank: 1 },
