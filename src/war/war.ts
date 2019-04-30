@@ -1,11 +1,11 @@
 import { dealCardsToPlayers } from '../common/card/card-actions';
-import { Deck } from '../common/deck/deck';
+import { createDeck, shuffle } from '../common/deck/deck';
 import { Player } from '../common/player/player';
 import { createRoster } from '../common/player/roster';
 import { skirmish } from './game-logic/skirmish';
+import { checkForVictory } from './game-logic/victory-logic';
 import { GameOutcome } from './reporting/game-outcome';
 import { validateWarOptions } from './validation/options-validation';
-import { checkForVictory } from './game-logic/victory-logic';
 
 export enum WarErrors {
   missingCards = 'Missing cards'
@@ -17,10 +17,7 @@ export const playWar = (suits: number, ranks: number, playerCount: number): Game
     throw error;
   }
 
-  const deck = new Deck();
-  deck.create(suits, ranks);
-  deck.shuffle();
-
+  const deck = shuffle(createDeck(suits, ranks));
   const roster = createRoster(playerCount);
   const numCards = suits * ranks;
 

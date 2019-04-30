@@ -1,12 +1,11 @@
-import { Deck, DeckErrors } from '../deck/deck';
+import { createDeck } from '../deck/deck';
 import { Player } from '../player/player';
 import { Card } from './card';
-import { dealCardsToPlayers, giveCardsToPlayer } from './card-actions';
+import { dealCardsToPlayers, giveCardsToPlayer, notEnoughCardsError } from './card-actions';
 
 describe('Deal cards to players', () => {
   test('Should deal cards out to players', () => {
-    const deck = new Deck();
-    deck.create(4, 13);
+    const deck = createDeck(4, 13);
     const roster = [new Player('Player A'), new Player('Player B')];
 
     expect(() => dealCardsToPlayers(deck, roster, 26)).not.toThrow();
@@ -17,11 +16,10 @@ describe('Deal cards to players', () => {
   });
 
   test('Should throw if asked to deal more cards than are available', () => {
-    const deck = new Deck();
-    deck.create(4, 13);
+    const deck = createDeck(4, 13);
     const roster = [new Player('Player A'), new Player('Player B')];
 
-    expect(() => dealCardsToPlayers(deck, roster, 200)).toThrowError(DeckErrors.noCardsLeft);
+    expect(() => dealCardsToPlayers(deck, roster, 200)).toThrowError(notEnoughCardsError);
   });
 });
 

@@ -7,7 +7,9 @@ module.exports = {
   collectCoverageFrom: [
     '**/*.ts',
     '!**/node_modules/**',
-    '!**/dist/**'
+    '!**/dist/**',
+    '!**/index.ts',
+    '!**/*.cmd.ts'
   ],
   coverageReporters: ['text']
 };

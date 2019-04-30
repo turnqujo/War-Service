@@ -1,13 +1,18 @@
-import { Deck } from '../deck/deck';
 import { Player } from '../player/player';
 import { Card } from './card';
 
-export const dealCardsToPlayers = (deck: Deck, players: Player[], cardsPerPlayer: number): void =>
+export const notEnoughCardsError = 'Not enough cards in the given deck.';
+export const dealCardsToPlayers = (deck: Card[], players: Player[], cardsPerPlayer: number): void => {
+  if (players.length * cardsPerPlayer > deck.length) {
+    throw notEnoughCardsError;
+  }
+
   players.forEach((player: Player) => {
     for (let i = 0; i < cardsPerPlayer; i++) {
-      player.takeWithOwnership(deck.deal());
+      player.takeWithOwnership(deck.shift());
     }
   });
+}
 
 export const giveCardsToPlayer = (cards: Card[], player: Player): void =>
   cards.forEach((card: Card) => player.receiveCard(card));
