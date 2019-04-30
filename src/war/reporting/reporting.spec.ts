@@ -13,14 +13,8 @@ describe('Building the hand lookup', () => {
     playerB.takeWithOwnership({ suit: 7, rank: 8 });
 
     const expectedOutput: HandLookup = {
-      [playerA.name]: [
-        { suit: 1, rank: 2, owner: playerA.name },
-        { suit: 3, rank: 4, owner: playerA.name }
-      ],
-      [playerB.name]: [
-        { suit: 5, rank: 6, owner: playerB.name },
-        { suit: 7, rank: 8, owner: playerB.name }
-      ]
+      [playerA.name]: [{ suit: 1, rank: 2, owner: playerA.name }, { suit: 3, rank: 4, owner: playerA.name }],
+      [playerB.name]: [{ suit: 5, rank: 6, owner: playerB.name }, { suit: 7, rank: 8, owner: playerB.name }]
     };
 
     expect(buildHandLookup([playerA, playerB])).toEqual(expectedOutput);

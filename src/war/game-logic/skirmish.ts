@@ -1,11 +1,11 @@
-import { Card } from "../../common/card/card";
-import { giveCardsToPlayer, playCardsIntoPool } from "../../common/card/card-actions";
-import { Player } from "../../common/player/player";
-import { findPlayerByName } from "../../common/player/roster";
-import { buildHandLookup } from "../reporting/reporting";
-import { TurnOutcome } from "../reporting/turn-outcome";
-import { findLosingCards, findWinningCards } from "./card-sorting";
-import { resolveConflict } from "./conflict";
+import { Card } from '../../common/card/card';
+import { giveCardsToPlayer, playCardsIntoPool } from '../../common/card/card-actions';
+import { Player } from '../../common/player/player';
+import { findPlayerByName } from '../../common/player/roster';
+import { buildHandLookup } from '../reporting/reporting';
+import { TurnOutcome } from '../reporting/turn-outcome';
+import { findLosingCards, findWinningCards } from './card-sorting';
+import { resolveConflict } from './conflict';
 
 export const cardlessPlayersError = 'No players have enough cards to continue.';
 export const skirmish = (roster: Player[]): TurnOutcome => {

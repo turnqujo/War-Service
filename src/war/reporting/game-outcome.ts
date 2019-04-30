@@ -1,4 +1,4 @@
-import { TurnOutcome } from "./turn-outcome";
+import { TurnOutcome } from './turn-outcome';
 
 export interface TurnRecord {
   [turnNumber: number]: TurnOutcome;

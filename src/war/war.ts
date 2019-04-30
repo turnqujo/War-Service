@@ -48,4 +48,4 @@ export const playWar = (suits: number, ranks: number, playerCount: number): Game
 
   record.winner = winner.name;
   return record;
-}
+};

@@ -1,4 +1,4 @@
-import { Card } from "../../common/card/card";
+import { Card } from '../../common/card/card';
 
 export interface HandLookup {
   [playerName: string]: Card[];

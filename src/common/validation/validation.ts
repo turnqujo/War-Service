@@ -6,4 +6,4 @@ export const isPositiveWholeNumber = (subject: number): boolean => {
   if (!isOnlyNumbers) return false;
 
   return true;
-}
+};

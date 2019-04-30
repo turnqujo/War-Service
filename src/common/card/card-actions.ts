@@ -13,4 +13,6 @@ export const giveCardsToPlayer = (cards: Card[], player: Player): void =>
   cards.forEach((card: Card) => player.receiveCard(card));
 
 export const playCardsIntoPool = (pool: Card[], players: Player[]): Card[] =>
-  pool.concat(players.filter((player: Player) => player.getHand().length > 0).map((player: Player) => player.playCard()));
+  pool.concat(
+    players.filter((player: Player) => player.getHand().length > 0).map((player: Player) => player.playCard())
+  );

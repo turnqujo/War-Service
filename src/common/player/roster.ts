@@ -1,4 +1,4 @@
-import { Player } from "./player";
+import { Player } from './player';
 
 export const createRoster = (numberOfPlayers: number): Player[] =>
   Array(numberOfPlayers)
