@@ -25,19 +25,19 @@ describe('Create a Roster of Players', () => {
 
 describe('Find a player by name in a given roster', () => {
   test('Should return the player if it is found', () => {
-    const playerA = new Player('Player A');
-    const playerB = new Player('Player B');
-    const playerC = new Player('Player C');
-    const roster = [playerA, playerB, playerC];
+    const playerA: Player = { name: 'Player A', hand: [] };
+    const playerB: Player = { name: 'Player B', hand: [] };
+    const playerC: Player = { name: 'Player C', hand: [] };
+    const roster: Player[] = [playerA, playerB, playerC];
 
     expect(findPlayerByName(roster, playerB.name)).toEqual(playerB);
   });
 
-  test('Should return null if the player is not in the given roster', () => {
-    const playerA = new Player('Player A');
-    const playerB = new Player('Player B');
-    const playerC = new Player('Player C');
-    const roster = [playerA, playerB, playerC];
+  test('Should throw if the player is not in the given roster', () => {
+    const playerA: Player = { name: 'Player A', hand: [] };
+    const playerB: Player = { name: 'Player B', hand: [] };
+    const playerC: Player = { name: 'Player C', hand: [] };
+    const roster: Player[] = [playerA, playerB, playerC];
 
     expect(() => findPlayerByName(roster, 'I do not exist!')).toThrow();
   });

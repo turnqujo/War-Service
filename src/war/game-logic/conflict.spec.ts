@@ -1,5 +1,5 @@
 import { Card } from '../../common/card/card';
-import { Player } from '../../common/player/player';
+import { Player, acceptCard } from '../../common/player/player';
 import { resolveConflict, noContendersError } from './conflict';
 
 describe('Conflict resolution', () => {
@@ -7,16 +7,16 @@ describe('Conflict resolution', () => {
     expect(() => resolveConflict([], [])).toThrowError(noContendersError));
 
   test('Should return a winner with the correct winnings.', () => {
-    const playerA = new Player('Player A');
-    const playerB = new Player('Player B');
+    const playerA: Player = { name: 'Player A', hand: [] };
+    const playerB: Player = { name: 'Player B', hand: [] };
 
     // Will be prize pool cards
-    playerA.takeWithOwnership({ suit: 1, rank: 2 });
-    playerB.takeWithOwnership({ suit: 2, rank: 8 });
+    acceptCard({ suit: 1, rank: 2 }, playerA);
+    acceptCard({ suit: 2, rank: 8 }, playerB);
 
     // The cards which will be played in battle
-    playerA.takeWithOwnership({ suit: 1, rank: 1 });
-    playerB.takeWithOwnership({ suit: 2, rank: 10 });
+    acceptCard({ suit: 1, rank: 1 }, playerA);
+    acceptCard({ suit: 2, rank: 10 }, playerB);
 
     // The cards which started the conflict
     const playedCards: Card[] = [
@@ -30,19 +30,19 @@ describe('Conflict resolution', () => {
   });
 
   test('Should handle 3+ player conflicts', () => {
-    const playerA = new Player('Player A');
-    const playerB = new Player('Player B');
-    const playerC = new Player('Player C');
+    const playerA: Player = { name: 'Player A', hand: [] };
+    const playerB: Player = { name: 'Player B', hand: [] };
+    const playerC: Player = { name: 'Player C', hand: [] };
 
     // Will be prize pool cards
-    playerA.takeWithOwnership({ suit: 1, rank: 2 });
-    playerB.takeWithOwnership({ suit: 2, rank: 8 });
-    playerC.takeWithOwnership({ suit: 3, rank: 4 });
+    acceptCard({ suit: 1, rank: 2 }, playerA);
+    acceptCard({ suit: 2, rank: 8 }, playerB);
+    acceptCard({ suit: 3, rank: 4 }, playerC);
 
     // The cards which will be played in battle
-    playerA.takeWithOwnership({ suit: 1, rank: 3 });
-    playerB.takeWithOwnership({ suit: 2, rank: 6 });
-    playerC.takeWithOwnership({ suit: 3, rank: 5 });
+    acceptCard({ suit: 1, rank: 3 }, playerA);
+    acceptCard({ suit: 2, rank: 6 }, playerB);
+    acceptCard({ suit: 3, rank: 5 }, playerC);
 
     // The cards which started the conflict
     const playedCards: Card[] = [
@@ -57,26 +57,26 @@ describe('Conflict resolution', () => {
   });
 
   test('Should handle multi-stage conflicts', () => {
-    const playerA = new Player('Player A');
-    const playerB = new Player('Player B');
+    const playerA: Player = { name: 'Player A', hand: [] };
+    const playerB: Player = { name: 'Player B', hand: [] };
 
     // BATTLE # 1
     // Will be prize pool cards
-    playerA.takeWithOwnership({ suit: 1, rank: 2 });
-    playerB.takeWithOwnership({ suit: 2, rank: 8 });
+    acceptCard({ suit: 1, rank: 2 }, playerA);
+    acceptCard({ suit: 2, rank: 8 }, playerB);
 
     // The cards which will be played in battle
-    playerA.takeWithOwnership({ suit: 1, rank: 3 });
-    playerB.takeWithOwnership({ suit: 2, rank: 3 });
+    acceptCard({ suit: 1, rank: 3 }, playerA);
+    acceptCard({ suit: 2, rank: 3 }, playerB);
 
     // BATTLE # 2
     // Will be prize pool cards
-    playerA.takeWithOwnership({ suit: 3, rank: 10 });
-    playerB.takeWithOwnership({ suit: 4, rank: 1 });
+    acceptCard({ suit: 3, rank: 10 }, playerA);
+    acceptCard({ suit: 4, rank: 1 }, playerB);
 
     // The cards which will be played in battle
-    playerA.takeWithOwnership({ suit: 1, rank: 2 });
-    playerB.takeWithOwnership({ suit: 2, rank: 7 });
+    acceptCard({ suit: 1, rank: 2 }, playerA);
+    acceptCard({ suit: 2, rank: 7 }, playerB);
 
     // The cards which started the conflict
     const playedCards: Card[] = [
@@ -90,31 +90,31 @@ describe('Conflict resolution', () => {
   });
 
   test('Should handle multi-battle, many-player conflicts', () => {
-    const playerA = new Player('Player A');
-    const playerB = new Player('Player B');
-    const playerC = new Player('Player C');
+    const playerA: Player = { name: 'Player A', hand: [] };
+    const playerB: Player = { name: 'Player B', hand: [] };
+    const playerC: Player = { name: 'Player C', hand: [] };
 
     // BATTLE # 1
     // Will be prize pool cards
-    playerA.takeWithOwnership({ suit: 1, rank: 2 });
-    playerB.takeWithOwnership({ suit: 2, rank: 8 });
-    playerC.takeWithOwnership({ suit: 3, rank: 8 });
+    acceptCard({ suit: 1, rank: 2 }, playerA);
+    acceptCard({ suit: 2, rank: 8 }, playerB);
+    acceptCard({ suit: 3, rank: 8 }, playerC);
 
     // The cards which will be played in battle
-    playerA.takeWithOwnership({ suit: 1, rank: 1 });
-    playerB.takeWithOwnership({ suit: 2, rank: 1 });
-    playerC.takeWithOwnership({ suit: 3, rank: 1 });
+    acceptCard({ suit: 1, rank: 1 }, playerA);
+    acceptCard({ suit: 2, rank: 1 }, playerB);
+    acceptCard({ suit: 3, rank: 1 }, playerC);
 
     // BATTLE # 2
     // Will be prize pool cards
-    playerA.takeWithOwnership({ suit: 1, rank: 3 });
-    playerB.takeWithOwnership({ suit: 2, rank: 3 });
-    playerC.takeWithOwnership({ suit: 3, rank: 3 });
+    acceptCard({ suit: 1, rank: 3 }, playerA);
+    acceptCard({ suit: 2, rank: 3 }, playerB);
+    acceptCard({ suit: 3, rank: 3 }, playerC);
 
     // The cards which will be played in battle
-    playerA.takeWithOwnership({ suit: 1, rank: 4 });
-    playerB.takeWithOwnership({ suit: 2, rank: 7 });
-    playerC.takeWithOwnership({ suit: 3, rank: 2 });
+    acceptCard({ suit: 1, rank: 4 }, playerA);
+    acceptCard({ suit: 2, rank: 7 }, playerB);
+    acceptCard({ suit: 3, rank: 2 }, playerC);
 
     // The cards which started the conflict
     const playedCards: Card[] = [
@@ -129,29 +129,29 @@ describe('Conflict resolution', () => {
   });
 
   test('Should handle multi-battle, many-player conflicts, in which one player loses early', () => {
-    const playerA = new Player('Player A');
-    const playerB = new Player('Player B');
-    const playerC = new Player('Player C');
+    const playerA: Player = { name: 'Player A', hand: [] };
+    const playerB: Player = { name: 'Player B', hand: [] };
+    const playerC: Player = { name: 'Player C', hand: [] };
 
     // BATTLE # 1
     // Will be prize pool cards
-    playerA.takeWithOwnership({ suit: 1, rank: 3 });
-    playerB.takeWithOwnership({ suit: 2, rank: 8 });
-    playerC.takeWithOwnership({ suit: 3, rank: 8 });
+    acceptCard({ suit: 1, rank: 3 }, playerA);
+    acceptCard({ suit: 2, rank: 8 }, playerB);
+    acceptCard({ suit: 3, rank: 8 }, playerC);
 
     // The cards which will be played in battle
-    playerA.takeWithOwnership({ suit: 1, rank: 2 });
-    playerB.takeWithOwnership({ suit: 2, rank: 2 });
-    playerC.takeWithOwnership({ suit: 3, rank: 1 });
+    acceptCard({ suit: 1, rank: 2 }, playerA);
+    acceptCard({ suit: 2, rank: 2 }, playerB);
+    acceptCard({ suit: 3, rank: 1 }, playerC);
 
     // BATTLE # 2
     // Will be prize pool cards
-    playerA.takeWithOwnership({ suit: 1, rank: 4 });
-    playerB.takeWithOwnership({ suit: 2, rank: 4 });
+    acceptCard({ suit: 1, rank: 4 }, playerA);
+    acceptCard({ suit: 2, rank: 4 }, playerB);
 
     // The cards which will be played in battle
-    playerA.takeWithOwnership({ suit: 1, rank: 1 });
-    playerB.takeWithOwnership({ suit: 2, rank: 7 });
+    acceptCard({ suit: 1, rank: 1 }, playerA);
+    acceptCard({ suit: 2, rank: 7 }, playerB);
 
     // The cards which started the conflict
     const playedCards: Card[] = [
@@ -176,8 +176,8 @@ describe('Conflict resolution', () => {
      * In a normal (2-person & 52-card deck) game of War, this can't happen.
      */
 
-    const playerA = new Player('Player A');
-    const playerB = new Player('Player B');
+    const playerA: Player = { name: 'Player A', hand: [] };
+    const playerB: Player = { name: 'Player B', hand: [] };
 
     // The cards which started the conflict
     const playedCards: Card[] = [
@@ -186,8 +186,8 @@ describe('Conflict resolution', () => {
     ];
 
     // Will be prize pool cards
-    playerA.takeWithOwnership({ suit: 1, rank: 4 });
-    playerB.takeWithOwnership({ suit: 2, rank: 7 });
+    acceptCard({ suit: 1, rank: 4 }, playerA);
+    acceptCard({ suit: 2, rank: 7 }, playerB);
 
     // No more cards added; both players will run out of cards at the same time.
 
@@ -196,8 +196,8 @@ describe('Conflict resolution', () => {
   });
 
   test('Should return a winner if a contender runs out of cards early', () => {
-    const playerA = new Player('Player A');
-    const playerB = new Player('Player B');
+    const playerA: Player = { name: 'Player A', hand: [] };
+    const playerB: Player = { name: 'Player B', hand: [] };
 
     // The cards which started the conflict
     const playedCards: Card[] = [
@@ -206,11 +206,11 @@ describe('Conflict resolution', () => {
     ];
 
     // Will be prize pool cards
-    playerA.takeWithOwnership({ suit: 1, rank: 4 });
-    playerB.takeWithOwnership({ suit: 2, rank: 7 });
+    acceptCard({ suit: 1, rank: 4 }, playerA);
+    acceptCard({ suit: 2, rank: 7 }, playerB);
 
     // Only player B will have enough cards
-    playerB.takeWithOwnership({ suit: 2, rank: 8 });
+    acceptCard({ suit: 2, rank: 8 }, playerB);
 
     const result = resolveConflict(playedCards, [playerA, playerB]);
     expect(result.winner.name).toBe(playerB.name);

@@ -4,13 +4,14 @@ import { HandLookup } from './turn-outcome';
 
 describe('Building the hand lookup', () => {
   test('Should construct a dictionary of player name to an array of cards', () => {
-    const playerA = new Player('Player A');
-    const playerB = new Player('Player B');
-
-    playerA.takeWithOwnership({ suit: 1, rank: 2 });
-    playerA.takeWithOwnership({ suit: 3, rank: 4 });
-    playerB.takeWithOwnership({ suit: 5, rank: 6 });
-    playerB.takeWithOwnership({ suit: 7, rank: 8 });
+    const playerA: Player = {
+      name: 'Player A',
+      hand: [{ suit: 1, rank: 2, owner: 'Player A' }, { suit: 3, rank: 4, owner: 'Player A' }]
+    };
+    const playerB: Player = {
+      name: 'Player B',
+      hand: [{ suit: 5, rank: 6, owner: 'Player B' }, { suit: 7, rank: 8, owner: 'Player B' }]
+    };
 
     const expectedOutput: HandLookup = {
       [playerA.name]: [{ suit: 1, rank: 2, owner: playerA.name }, { suit: 3, rank: 4, owner: playerA.name }],

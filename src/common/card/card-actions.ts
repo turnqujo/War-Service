@@ -1,4 +1,4 @@
-import { Player } from '../player/player';
+import { acceptCards, playCard, Player } from '../player/player';
 import { Card } from './card';
 
 export const notEnoughCardsError = 'Not enough cards in the given deck.';
@@ -7,17 +7,8 @@ export const dealCardsToPlayers = (deck: Card[], players: Player[], cardsPerPlay
     throw notEnoughCardsError;
   }
 
-  players.forEach((player: Player) => {
-    for (let i = 0; i < cardsPerPlayer; i++) {
-      player.takeWithOwnership(deck.shift());
-    }
-  });
-}
-
-export const giveCardsToPlayer = (cards: Card[], player: Player): void =>
-  cards.forEach((card: Card) => player.receiveCard(card));
+  players.forEach((player: Player) => acceptCards(deck.slice(0, cardsPerPlayer), player));
+};
 
 export const playCardsIntoPool = (pool: Card[], players: Player[]): Card[] =>
-  pool.concat(
-    players.filter((player: Player) => player.getHand().length > 0).map((player: Player) => player.playCard())
-  );
+  pool.concat(players.filter((player: Player) => player.hand.length > 0).map((player: Player) => playCard(player)));

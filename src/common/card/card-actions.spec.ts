@@ -1,42 +1,29 @@
 import { createDeck } from '../deck/deck';
 import { Player } from '../player/player';
-import { Card } from './card';
-import { dealCardsToPlayers, giveCardsToPlayer, notEnoughCardsError } from './card-actions';
+import { dealCardsToPlayers, notEnoughCardsError } from './card-actions';
 
 describe('Deal cards to players', () => {
   test('Should deal cards out to players', () => {
     const deck = createDeck(4, 13);
-    const roster = [new Player('Player A'), new Player('Player B')];
+    const roster: Player[] = [{ name: 'Player A', hand: [] }, { name: 'Player B', hand: [] }];
 
     expect(() => dealCardsToPlayers(deck, roster, 26)).not.toThrow();
 
-    roster.forEach((player: Player) => {
-      expect(player.getHand().length).toBe(26);
-    });
+    roster.forEach((player: Player) => expect(player.hand.length).toBe(26));
   });
 
   test('Should throw if asked to deal more cards than are available', () => {
     const deck = createDeck(4, 13);
-    const roster = [new Player('Player A'), new Player('Player B')];
+    const roster: Player[] = [{ name: 'Player A', hand: [] }, { name: 'Player B', hand: [] }];
 
     expect(() => dealCardsToPlayers(deck, roster, 200)).toThrowError(notEnoughCardsError);
   });
-});
 
-describe('Giving cards to a player', () => {
-  test('Should give cards to a player without altering ownership', () => {
-    const subject = new Player('I won!');
-    const prizes: Card[] = [
-      { owner: 'Other Player', suit: 1, rank: 1 },
-      { owner: 'Someone Else', suit: 1, rank: 1 },
-      { owner: subject.name, suit: 1, rank: 1 }
-    ];
+  test('Should deal from the top of the deck', () => {
+    const deck = createDeck(4, 13);
+    const roster: Player[] = [{ name: 'Player A', hand: [] }, { name: 'Player B', hand: [] }];
+    expect(() => dealCardsToPlayers(deck, roster, 2)).not.toThrow();
 
-    giveCardsToPlayer(prizes, subject);
-
-    prizes.forEach((prize: Card) => {
-      const playedCard: Card = { ...prize, playedBy: subject.name };
-      expect(subject.playCard()).toEqual(playedCard);
-    });
+    expect(roster[0].hand[0]).toEqual({ suit: 1, rank: 1, owner: 'Player A' });
   });
 });

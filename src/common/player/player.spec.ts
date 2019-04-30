@@ -1,76 +1,38 @@
-import { Player, PlayerErrors } from './player';
 import { Card } from '../card/card';
+import { acceptCard, playCard, Player, acceptCards } from './player';
 
-describe('The Player', () => {
-  test('Should attach its name as the last player to a card when it is played.', () => {
-    const subject = new Player('Player A');
-    subject.receiveCard({ suit: 1, rank: 1, owner: 'Player B', playedBy: 'Player B' });
-    expect(subject.playCard()).toEqual({ suit: 1, rank: 1, owner: 'Player B', playedBy: subject.name });
+describe('The player', () => {
+  test('Should take ownership of accepted cards if they do not already have an owner.', () => {
+    const subject: Player = { name: 'Player A', hand: [] };
+    acceptCard({ suit: 1, rank: 1 }, subject);
+    expect(subject.hand[0].owner).toBe(subject.name);
   });
 
-  test('Should accept and return cards in first-in-first-out order.', () => {
-    const subject = new Player('Player A');
-    const exampleCards: Card[] = [{ owner: 'Player B', suit: 1, rank: 1 }, { suit: 1, rank: 2 }];
-    exampleCards.forEach((card: Card) => subject.receiveCard(card));
-
-    const expectedCards: Card[] = [
-      { suit: 1, rank: 1, owner: 'Player B', playedBy: subject.name },
-      { suit: 1, rank: 2, playedBy: subject.name }
-    ];
-    expectedCards.forEach((card: Card) => {
-      expect(subject.playCard()).toEqual(card);
-    });
+  test('Should not take ownership of accepted cards if they already have an owner.', () => {
+    const subject: Player = { name: 'Player A', hand: [] };
+    acceptCard({ suit: 1, rank: 1, owner: 'Player B' }, subject);
+    expect(subject.hand[0].owner).toBe('Player B');
   });
 
-  test('Should take ownership of a given card if asked, and return them in first-in-first-out order.', () => {
-    const subject = new Player('Some Player');
-    const exampleCards: Card[] = [{ suit: 1, rank: 1 }, { suit: 1, rank: 2 }, { suit: 1, rank: 3 }];
-    exampleCards.forEach((card: Card) => subject.takeWithOwnership(card));
+  test('Should accept multiple cards with the same ownership rules applied.', () => {
+    const subject: Player = { name: 'Player A', hand: [] };
+    const cards = [{ suit: 1, rank: 1, owner: 'Player B' }, { suit: 2, rank: 2 }];
 
-    const expectedCards: Card[] = [
-      { suit: 1, rank: 1, owner: subject.name, playedBy: subject.name },
-      { suit: 1, rank: 2, owner: subject.name, playedBy: subject.name }
-    ];
-    expectedCards.forEach((card: Card) => {
-      expect(subject.playCard()).toEqual(card);
-    });
+    const expectedOutput = [{ suit: 1, rank: 1, owner: 'Player B' }, { suit: 2, rank: 2, owner: 'Player A' }];
+    acceptCards(cards, subject);
+    expect(subject.hand).toEqual(expectedOutput);
   });
 
-  test('Should throw if asked to take ownership of an owned card.', () => {
-    const subject = new Player('Player A');
-    expect(() => subject.takeWithOwnership({ rank: 1, suit: 1, owner: 'Player B' })).toThrowError(
-      PlayerErrors.alreadyOwned
-    );
+  test('Should play a card when asked, and mark itself as the last player.', () => {
+    const subjectCard = { suit: 1, rank: 1, owner: 'Player A' };
+    const subject: Player = { name: 'Player A', hand: [subjectCard] };
+
+    const expectedOutput: Card = { suit: 1, rank: 1, owner: 'Player A', playedBy: 'Player A' };
+    expect(playCard(subject)).toEqual(expectedOutput);
   });
 
-  test('Should throw if asked to play a card with none left in hand.', () => {
-    const subject = new Player('Some Player');
-    subject.receiveCard({ suit: 1, rank: 1 });
-    subject.playCard();
-    expect(() => subject.playCard()).toThrowError(PlayerErrors.outOfCards);
-  });
-
-  test('Should expose the number of cards it has in hand.', () => {
-    const subject = new Player('Some Player');
-    subject.receiveCard({ suit: 1, rank: 1 });
-    subject.receiveCard({ suit: 1, rank: 2 });
-    expect(subject.getHand().length).toBe(2);
-  });
-
-  test('Should return a copy of its hand.', () => {
-    const subject = new Player('Player A');
-    const expectedCards: Card[] = [
-      { suit: 1, rank: 1, owner: subject.name },
-      { suit: 1, rank: 2, owner: subject.name }
-    ];
-    expectedCards.forEach((card: Card) => subject.receiveCard(card));
-
-    const hand = subject.getHand();
-    expect(hand).toEqual(expectedCards);
-
-    hand.push({ suit: 9, rank: 9 });
-
-    // The actual hand of the subject should be unafected by changes to the returned array
-    expect(subject.getHand()).toEqual(expectedCards);
+  test('Should return null if asked to play a card when they do not have any left.', () => {
+    const subject: Player = { name: 'Player A', hand: [] };
+    expect(playCard(subject)).toEqual(null);
   });
 });

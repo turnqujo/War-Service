@@ -3,13 +3,14 @@ import { Player } from '../../common/player/player';
 
 describe('Victory condition logic for War', () => {
   test('Should return the winning player if there is only one player left', () => {
-    expect(checkForVictory([new Player('Player A')])).not.toBeNull();
+    const roster: Player[] = [{ name: 'Player A', hand: [] }];
+    expect(checkForVictory(roster)).not.toBeNull();
   });
 
   test('Should return the winning player if they are the only one with cards left', () => {
-    const player = new Player('I am gonna win!');
-    player.takeWithOwnership({ suit: 4, rank: 2 });
-    const roster = [player, new Player('I am out of cards!')];
+    const player: Player = { name: 'Player A', hand: [{ suit: 4, rank: 2, owner: 'Player A' }] };
+    const cardlessPlayer: Player = { name: 'Player B', hand: [] };
+    const roster = [player, cardlessPlayer];
 
     expect(checkForVictory(roster)).toEqual(player);
   });

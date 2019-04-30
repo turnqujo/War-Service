@@ -1,4 +1,4 @@
-import { Card } from "../card/card";
+import { Card } from '../card/card';
 
 export const createDeck = (numberOfSuits: number, numberOfRanks: number): Card[] => {
   const newDeck = [];
@@ -10,7 +10,7 @@ export const createDeck = (numberOfSuits: number, numberOfRanks: number): Card[]
   }
 
   return newDeck;
-}
+};
 
 export const shuffle = (deck: Card[]): Card[] => {
   const shuffled = deck.slice();
@@ -23,4 +23,4 @@ export const shuffle = (deck: Card[]): Card[] => {
   }
 
   return shuffled;
-}
+};

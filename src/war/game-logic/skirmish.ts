@@ -1,6 +1,6 @@
 import { Card } from '../../common/card/card';
-import { giveCardsToPlayer, playCardsIntoPool } from '../../common/card/card-actions';
-import { Player } from '../../common/player/player';
+import { playCardsIntoPool } from '../../common/card/card-actions';
+import { Player, acceptCards } from '../../common/player/player';
 import { findPlayerByName } from '../../common/player/roster';
 import { buildHandLookup } from '../reporting/reporting';
 import { TurnOutcome } from '../reporting/turn-outcome';
@@ -20,7 +20,7 @@ export const skirmish = (roster: Player[]): TurnOutcome => {
   if (winningCards.length === 1) {
     // Multiple cards were played, but only one winner
     const uncontestedWinner = findPlayerByName(roster, winningCards[0].playedBy);
-    giveCardsToPlayer(playedCards, uncontestedWinner);
+    acceptCards(playedCards, uncontestedWinner);
 
     const resolution = { winner: uncontestedWinner.name, winnings: playedCards };
     return { playedCards, resolution, handsAtStartOfTurn, handsAtEndOfTurn: buildHandLookup(roster) };
@@ -33,7 +33,7 @@ export const skirmish = (roster: Player[]): TurnOutcome => {
 
     const losingCards = findLosingCards(playedCards, winningCards);
     const winnings = conflictOutcome.winnings.concat(losingCards);
-    giveCardsToPlayer(winnings, conflictOutcome.winner);
+    acceptCards(winnings, conflictOutcome.winner);
 
     const resolution = { winner: conflictOutcome.winner.name, winnings };
     return { playedCards, resolution, handsAtStartOfTurn, handsAtEndOfTurn: buildHandLookup(roster) };

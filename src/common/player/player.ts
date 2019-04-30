@@ -1,36 +1,16 @@
 import { Card } from '../card/card';
 
-export enum PlayerErrors {
-  alreadyOwned = 'Cannot accept ownership of an already owned card.',
-  outOfCards = 'The player has no more cards.'
+export interface Player {
+  readonly name: string;
+  readonly hand: Card[];
 }
 
-export class Player {
-  private hand: Card[];
+export const acceptCard = (card: Card, player: Player): void => {
+  card.owner ? player.hand.push(card) : player.hand.push({ ...card, owner: player.name });
+};
 
-  constructor(public readonly name: string) {
-    this.hand = [];
-  }
+export const acceptCards = (cards: Card[], player: Player): void =>
+  cards.forEach((card: Card) => acceptCard(card, player));
 
-  public getHand = (): Card[] => this.hand.slice();
-
-  public takeWithOwnership(card: Card): void {
-    if (!!card.owner) {
-      throw PlayerErrors.alreadyOwned;
-    }
-
-    this.hand.push({ ...card, owner: this.name });
-  }
-
-  public receiveCard(card: Card): void {
-    this.hand.push(card);
-  }
-
-  public playCard(): Card {
-    if (this.hand.length <= 0) {
-      throw PlayerErrors.outOfCards;
-    }
-
-    return { ...this.hand.shift(), playedBy: this.name };
-  }
-}
+export const playCard = (player: Player): Card =>
+  player.hand.length > 0 ? { ...player.hand.shift(), playedBy: player.name } : null;

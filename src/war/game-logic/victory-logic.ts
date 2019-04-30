@@ -5,10 +5,6 @@ export const checkForVictory = (roster: Player[]): Player => {
     return roster[0];
   }
 
-  const playersWithCardsRemaining = roster.filter((player: Player) => player.getHand().length > 0);
-  if (playersWithCardsRemaining.length === 1) {
-    return playersWithCardsRemaining[0];
-  }
-
-  return null;
+  const playersWithCardsRemaining = roster.filter((player: Player) => player.hand.length > 0);
+  return playersWithCardsRemaining.length === 1 ? playersWithCardsRemaining[0] : null;
 };

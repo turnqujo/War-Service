@@ -39,7 +39,7 @@ export const playWar = (suits: number, ranks: number, playerCount: number): Game
     winner = checkForVictory(roster);
   }
 
-  if (winner.getHand().length !== numCards) {
+  if (winner.hand.length !== numCards) {
     throw WarErrors.missingCards;
   }
 
