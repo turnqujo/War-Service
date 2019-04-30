@@ -26,4 +26,12 @@ describe('Deal cards to players', () => {
 
     expect(roster[0].hand[0]).toEqual({ suit: 1, rank: 1, owner: 'Player A' });
   });
+
+  test('Should not deal the same card to multiple players', () => {
+    const deck = createDeck(4, 13);
+    const roster: Player[] = [{ name: 'Player A', hand: [] }, { name: 'Player B', hand: [] }];
+    expect(() => dealCardsToPlayers(deck, roster, 2)).not.toThrow();
+
+    expect(roster[0].hand).not.toEqual(roster[1].hand);
+  });
 });
