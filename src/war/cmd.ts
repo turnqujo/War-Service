@@ -1,6 +1,6 @@
 import * as readline from 'readline';
-import { playWar } from './src/war/war';
-import { isPositiveWholeNumber } from './src/common/validation/validation';
+import { playWar } from './war';
+import { isPositiveWholeNumber } from '../common/validation/validation';
 
 let rl = readline.createInterface({
   input: process.stdin,
@@ -53,8 +53,11 @@ const askForYesOrNo = (query: string): Promise<YesOrNo> => {
     return;
   }
 
+  console.log(`Starting a ${numberOfPlayers}-player game with a ${numCards}-card deck!`);
   const result = playWar(numberOfSuits, numberOfRanks, numberOfPlayers);
-  console.log(`${result.winner} has won!`);
+
+  const numberOfTurns = Object.keys(result.turnRecord).pop();
+  console.log(`${result.winner} has won on turn ${numberOfTurns}!`);
 
   const playAgain = await askForYesOrNo('Do you want to play again? (yes / no) ');
   if (playAgain === YesOrNo.yes) {
