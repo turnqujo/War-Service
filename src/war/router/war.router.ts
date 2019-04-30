@@ -15,7 +15,7 @@ warRouter.get('/', (request: Request, response: Response) => {
   }
 
   try {
-    response.status(200).send(playWar(suits, ranks, players));
+    return response.status(200).send(playWar(suits, ranks, players));
   } catch (errorMsg) {
     return response.status(400).send({ error: errorMsg });
   }

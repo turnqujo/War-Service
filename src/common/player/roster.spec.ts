@@ -39,6 +39,6 @@ describe('Find a player by name in a given roster', () => {
     const playerC = new Player('Player C');
     const roster = [playerA, playerB, playerC];
 
-    expect(findPlayerByName(roster, 'I do not exist!')).toBeNull();
+    expect(() => findPlayerByName(roster, 'I do not exist!')).toThrow();
   });
 });

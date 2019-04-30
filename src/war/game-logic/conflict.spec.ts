@@ -1,9 +1,12 @@
 import { Card } from '../../common/card/card';
 import { Player } from '../../common/player/player';
-import { resolveWar } from './turn-logic';
+import { resolveConflict, noContendersError } from './conflict';
 
-describe('War resolution logic', () => {
-  test('Should return a winner with the correct spoils', () => {
+describe('Conflict resolution', () => {
+  test('Should throw if given an empty array of contenders.', () =>
+    expect(() => resolveConflict([], [])).toThrowError(noContendersError));
+
+  test('Should return a winner with the correct winnings.', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
 
@@ -15,18 +18,18 @@ describe('War resolution logic', () => {
     playerA.takeWithOwnership({ suit: 1, rank: 1 });
     playerB.takeWithOwnership({ suit: 2, rank: 10 });
 
-    // The cards which started the war
+    // The cards which started the conflict
     const playedCards: Card[] = [
       { owner: playerA.name, suit: 1, rank: 10 },
       { owner: playerB.name, suit: 2, rank: 10 }
     ];
 
-    const result = resolveWar(playedCards, [playerA, playerB]);
-    expect(result.winner).toBe(playerB.name);
-    expect(result.spoils.length).toBe(6);
+    const result = resolveConflict(playedCards, [playerA, playerB]);
+    expect(result.winner.name).toBe(playerB.name);
+    expect(result.winnings.length).toBe(6);
   });
 
-  test('Should handle 3+ player wars', () => {
+  test('Should handle 3+ player conflicts', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
     const playerC = new Player('Player C');
@@ -41,19 +44,19 @@ describe('War resolution logic', () => {
     playerB.takeWithOwnership({ suit: 2, rank: 6 });
     playerC.takeWithOwnership({ suit: 3, rank: 5 });
 
-    // The cards which started the war
+    // The cards which started the conflict
     const playedCards: Card[] = [
       { owner: playerA.name, suit: 1, rank: 10 },
       { owner: playerB.name, suit: 2, rank: 10 },
       { owner: playerC.name, suit: 3, rank: 10 }
     ];
 
-    const result = resolveWar(playedCards, [playerA, playerB, playerC]);
-    expect(result.winner).toBe(playerB.name);
-    expect(result.spoils.length).toBe(9);
+    const result = resolveConflict(playedCards, [playerA, playerB, playerC]);
+    expect(result.winner.name).toBe(playerB.name);
+    expect(result.winnings.length).toBe(9);
   });
 
-  test('Should handle multi-battle wars', () => {
+  test('Should handle multi-stage conflicts', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
 
@@ -75,18 +78,18 @@ describe('War resolution logic', () => {
     playerA.takeWithOwnership({ suit: 1, rank: 2 });
     playerB.takeWithOwnership({ suit: 2, rank: 7 });
 
-    // The cards which started the war
+    // The cards which started the conflict
     const playedCards: Card[] = [
       { owner: playerA.name, suit: 1, rank: 10 },
       { owner: playerB.name, suit: 2, rank: 10 }
     ];
 
-    const result = resolveWar(playedCards, [playerA, playerB]);
-    expect(result.winner).toBe(playerB.name);
-    expect(result.spoils.length).toBe(10);
+    const result = resolveConflict(playedCards, [playerA, playerB]);
+    expect(result.winner.name).toBe(playerB.name);
+    expect(result.winnings.length).toBe(10);
   });
 
-  test('Should handle multi-battle, many-player wars', () => {
+  test('Should handle multi-battle, many-player conflicts', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
     const playerC = new Player('Player C');
@@ -113,19 +116,19 @@ describe('War resolution logic', () => {
     playerB.takeWithOwnership({ suit: 2, rank: 7 });
     playerC.takeWithOwnership({ suit: 3, rank: 2 });
 
-    // The cards which started the war
+    // The cards which started the conflict
     const playedCards: Card[] = [
       { owner: playerA.name, suit: 1, rank: 10 },
       { owner: playerB.name, suit: 2, rank: 10 },
       { owner: playerC.name, suit: 3, rank: 10 }
     ];
 
-    const result = resolveWar(playedCards, [playerA, playerB, playerC]);
-    expect(result.winner).toBe(playerB.name);
-    expect(result.spoils.length).toBe(15);
+    const result = resolveConflict(playedCards, [playerA, playerB, playerC]);
+    expect(result.winner.name).toBe(playerB.name);
+    expect(result.winnings.length).toBe(15);
   });
 
-  test('Should handle multi-battle, many-player wars where one player loses early', () => {
+  test('Should handle multi-battle, many-player conflicts, in which one player loses early', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
     const playerC = new Player('Player C');
@@ -150,16 +153,16 @@ describe('War resolution logic', () => {
     playerA.takeWithOwnership({ suit: 1, rank: 1 });
     playerB.takeWithOwnership({ suit: 2, rank: 7 });
 
-    // The cards which started the war
+    // The cards which started the conflict
     const playedCards: Card[] = [
       { owner: playerA.name, suit: 1, rank: 10 },
       { owner: playerB.name, suit: 2, rank: 10 },
       { owner: playerC.name, suit: 3, rank: 10 }
     ];
 
-    const result = resolveWar(playedCards, [playerA, playerB, playerC]);
-    expect(result.winner).toBe(playerB.name);
-    expect(result.spoils.length).toBe(13);
+    const result = resolveConflict(playedCards, [playerA, playerB, playerC]);
+    expect(result.winner.name).toBe(playerB.name);
+    expect(result.winnings.length).toBe(13);
   });
 
   test('Should return a random winner if all contenders do not have enough cards to battle', () => {
@@ -167,8 +170,8 @@ describe('War resolution logic', () => {
      * NOTE: This could legitimately happen:
      * - Four player game
      * - Two players both have two or fewer cards left
-     * - They win against the other two players in a tie during a regular turn, entering war
-     * - They are in war without the minimum cards necessary to carry out even one round
+     * - They win against the other two players in a tie during a regular turn, starting a conflict
+     * - They are in conflict without the minimum cards necessary to carry out even one round
      *
      * In a normal (2-person & 52-card deck) game of War, this can't happen.
      */
@@ -176,7 +179,7 @@ describe('War resolution logic', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
 
-    // The cards which started the war
+    // The cards which started the conflict
     const playedCards: Card[] = [
       { owner: playerA.name, suit: 1, rank: 10 },
       { owner: playerB.name, suit: 2, rank: 10 }
@@ -188,15 +191,15 @@ describe('War resolution logic', () => {
 
     // No more cards added; both players will run out of cards at the same time.
 
-    const result = resolveWar(playedCards, [playerA, playerB]);
-    expect(result.spoils.length).toBe(4);
+    const result = resolveConflict(playedCards, [playerA, playerB]);
+    expect(result.winnings.length).toBe(4);
   });
 
   test('Should return a winner if a contender runs out of cards early', () => {
     const playerA = new Player('Player A');
     const playerB = new Player('Player B');
 
-    // The cards which started the war
+    // The cards which started the conflict
     const playedCards: Card[] = [
       { owner: playerA.name, suit: 1, rank: 10 },
       { owner: playerB.name, suit: 2, rank: 10 }
@@ -209,8 +212,8 @@ describe('War resolution logic', () => {
     // Only player B will have enough cards
     playerB.takeWithOwnership({ suit: 2, rank: 8 });
 
-    const result = resolveWar(playedCards, [playerA, playerB]);
-    expect(result.winner).toBe(playerB.name);
-    expect(result.spoils.length).toBe(5);
+    const result = resolveConflict(playedCards, [playerA, playerB]);
+    expect(result.winner.name).toBe(playerB.name);
+    expect(result.winnings.length).toBe(5);
   });
 });

@@ -1,13 +1,17 @@
 import { Card } from "../../common/card/card";
-import { ConflictOutcome } from "./conflict-outcome";
 
 export interface HandLookup {
   [playerName: string]: Card[];
 }
 
+export interface Resolution {
+  winner: string;
+  winnings: Card[];
+}
+
 export interface TurnOutcome {
   playedCards: Card[];
-  resolution: ConflictOutcome;
+  resolution: Resolution;
   handsAtStartOfTurn: HandLookup;
   handsAtEndOfTurn: HandLookup;
 }
