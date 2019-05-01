@@ -22,3 +22,11 @@ export enum TurnType {
   skirmish = 'skirmish',
   conflict = 'conflict'
 }
+
+export const isTurnRecord = (object: any): object is TurnRecord =>
+  'gameCompleted' in object &&
+  'nameOfWinner' in object &&
+  'playedCards' in object &&
+  'playersAtEndOfTurn' in object &&
+  'type' in object &&
+  'winnings' in object;
