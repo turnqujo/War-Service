@@ -13,8 +13,6 @@ describe('Creating a new game of War', () => {
     const subject = createGame(4, 13, 2);
     expect(subject.numberOfSuits).toBe(4);
     expect(subject.numberOfRanks).toBe(13);
-    expect(subject.participantNames.length).toBe(2);
-    expect(subject.nameOfWinner).toBeNull();
     expect(subject.turnRecords[0].playersAtEndOfTurn[0].hand.length).toBe(26);
     expect(subject.turnRecords[0].playersAtEndOfTurn[1].hand.length).toBe(26);
   });

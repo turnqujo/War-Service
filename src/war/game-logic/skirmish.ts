@@ -5,6 +5,7 @@ import { findPlayerByName } from '../../common/player/roster';
 import { TurnRecord, TurnType } from '../record/record';
 import { findLosingCards, findWinningCards } from './card-sorting';
 import { resolveConflict } from './conflict';
+import { checkForVictory } from './victory-logic';
 
 export const cardlessPlayersError = 'No players have enough cards to continue.';
 export const skirmish = (roster: Player[], seed?: string): TurnRecord => {
@@ -24,7 +25,8 @@ export const skirmish = (roster: Player[], seed?: string): TurnRecord => {
       playedCards,
       nameOfWinner: uncontestedWinner.name,
       winnings: playedCards,
-      playersAtEndOfTurn: JSON.parse(JSON.stringify(roster))
+      playersAtEndOfTurn: JSON.parse(JSON.stringify(roster)),
+      gameCompleted: checkForVictory(roster)
     };
   }
 
@@ -41,7 +43,8 @@ export const skirmish = (roster: Player[], seed?: string): TurnRecord => {
       playedCards,
       nameOfWinner: conflictOutcome.winner.name,
       winnings,
-      playersAtEndOfTurn: JSON.parse(JSON.stringify(roster))
+      playersAtEndOfTurn: JSON.parse(JSON.stringify(roster)),
+      gameCompleted: checkForVictory(roster)
     };
   }
 };

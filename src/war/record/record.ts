@@ -2,20 +2,19 @@ import { Card } from '../../common/card/card';
 import { Player } from '../../common/player/player';
 
 export interface GameRecord {
-  numberOfSuits: number;
   numberOfRanks: number;
-  participantNames: string[];
-  turnRecords: TurnRecord[];
-  nameOfWinner: string;
+  numberOfSuits: number;
   seed?: string;
+  turnRecords: TurnRecord[];
 }
 
 export interface TurnRecord {
-  type: TurnType;
-  playedCards: Card[];
+  gameCompleted: boolean;
   nameOfWinner: string;
-  winnings: Card[];
+  playedCards: Card[];
   playersAtEndOfTurn: Player[];
+  type: TurnType;
+  winnings: Card[];
 }
 
 export enum TurnType {

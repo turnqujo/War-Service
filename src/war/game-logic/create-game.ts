@@ -1,6 +1,5 @@
 import { dealCardsToPlayers } from '../../common/card/card-actions';
 import { createDeck, shuffle } from '../../common/deck/deck';
-import { Player } from '../../common/player/player';
 import { createRoster } from '../../common/player/roster';
 import { GameRecord, TurnType } from '../record/record';
 import { validateWarOptions } from '../validation/options-validation';
@@ -23,17 +22,16 @@ export const createGame = (
   return {
     numberOfSuits,
     numberOfRanks,
-    participantNames: roster.map((player: Player) => player.name),
     turnRecords: [
       {
-        type: TurnType.preparation,
-        playedCards: [],
+        gameCompleted: false,
         nameOfWinner: null,
-        winnings: [],
-        playersAtEndOfTurn: JSON.parse(JSON.stringify(roster))
+        playedCards: [],
+        playersAtEndOfTurn: JSON.parse(JSON.stringify(roster)),
+        type: TurnType.preparation,
+        winnings: []
       }
     ],
-    nameOfWinner: null,
     seed
   };
 };
