@@ -56,8 +56,8 @@ const askForYesOrNo = (query: string): Promise<YesOrNo> => {
   console.log(`Starting a ${numberOfPlayers}-player game with a ${numCards}-card deck!`);
   const result = playWar(numberOfSuits, numberOfRanks, numberOfPlayers);
 
-  const numberOfTurns = Object.keys(result.turnRecord).pop();
-  console.log(`${result.winner} has won on turn ${numberOfTurns}!`);
+  const numberOfTurns = Object.keys(result.turnRecords).pop();
+  console.log(`${result.nameOfWinner} has won on turn ${numberOfTurns}!`);
 
   const playAgain = await askForYesOrNo('Do you want to play again? (yes / no) ');
   if (playAgain === YesOrNo.yes) {

@@ -1,3 +1,4 @@
+import * as random from 'seedrandom';
 import { Card } from '../../common/card/card';
 import { playCardsIntoPool } from '../../common/card/card-actions';
 import { Player } from '../../common/player/player';
@@ -10,7 +11,7 @@ export interface ConflictOutcome {
 }
 
 export const noContendersError = 'No contenders given.';
-export const resolveConflict = (contestedCards: Card[], contenders: Player[]): ConflictOutcome => {
+export const resolveConflict = (contestedCards: Card[], contenders: Player[], seed?: string): ConflictOutcome => {
   if (contenders.length === 0) {
     throw noContendersError;
   }
@@ -20,8 +21,9 @@ export const resolveConflict = (contestedCards: Card[], contenders: Player[]): C
 
   if (faceUpPool.length === 0) {
     // Can happen if all of the contenders didn't have enough cards to do battle - just pick one at random
+    const rng = random(seed);
     return {
-      winner: contenders[Math.floor(Math.random() * contenders.length)],
+      winner: contenders[Math.floor(rng.quick() * contenders.length)],
       winnings: prizePool
     };
   }

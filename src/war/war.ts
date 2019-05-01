@@ -1,48 +1,42 @@
-import { dealCardsToPlayers } from '../common/card/card-actions';
-import { createDeck, shuffle } from '../common/deck/deck';
 import { Player } from '../common/player/player';
-import { createRoster } from '../common/player/roster';
+import { createGame } from './game-logic/create-game';
 import { skirmish } from './game-logic/skirmish';
 import { checkForVictory } from './game-logic/victory-logic';
-import { GameOutcome } from './reporting/game-outcome';
+import { GameRecord } from './record/record';
 import { validateWarOptions } from './validation/options-validation';
 
 export enum WarErrors {
   missingCards = 'Missing cards'
 }
 
-export const playWar = (suits: number, ranks: number, playerCount: number): GameOutcome => {
-  const error = validateWarOptions(suits, ranks, playerCount);
+export const playWar = (
+  numberOfSuits: number,
+  numberOfRanks: number,
+  playerCount: number,
+  seed?: string
+): GameRecord => {
+  console.time('Game completed in');
+  const error = validateWarOptions(numberOfSuits, numberOfRanks, playerCount);
   if (error !== null) {
     throw error;
   }
 
-  const deck = shuffle(createDeck(suits, ranks));
-  const roster = createRoster(playerCount);
-  const numCards = suits * ranks;
-
-  dealCardsToPlayers(deck, roster, numCards / playerCount);
-
-  const record: GameOutcome = {
-    suits,
-    ranks,
-    participants: roster.map((player: Player) => player.name),
-    turnRecord: {},
-    winner: null
-  };
+  const record = createGame(numberOfSuits, numberOfRanks, playerCount, seed);
 
   let winner: Player = null;
   let turnNumber = 0;
   while (winner === null) {
     turnNumber++;
-    record.turnRecord[turnNumber] = skirmish(roster);
-    winner = checkForVictory(roster);
+    const previousTurnRoster = record.turnRecords[turnNumber - 1].playersAtEndOfTurn;
+    record.turnRecords[turnNumber] = skirmish(previousTurnRoster, record.seed);
+    winner = checkForVictory(previousTurnRoster);
   }
 
-  if (winner.hand.length !== numCards) {
+  if (winner.hand.length !== numberOfSuits * numberOfRanks) {
     throw WarErrors.missingCards;
   }
 
-  record.winner = winner.name;
+  record.nameOfWinner = winner.name;
+  console.timeEnd('Game completed in');
   return record;
 };

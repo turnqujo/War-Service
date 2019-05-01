@@ -3,12 +3,9 @@ import { createDeck, shuffle } from './deck';
 describe('Deck Actions', () => {
   test('Should create a new deck of cards.', () => expect(createDeck(4, 13).length).toBe(52));
 
-  test('Should shuffle decks of cards without mutation.', () => {
+  test('Should shuffle decks of cards.', () => {
     const unshuffled = createDeck(4, 13);
-    const shuffled = shuffle(unshuffled);
-
-    // NOTE: There's a very rare case where the deck will be shuffled,
-    // but end up in the same order as it was originally.
+    const shuffled = shuffle(unshuffled, 'Will be shuffled, but the same way every time!');
     expect(unshuffled).not.toEqual(shuffled);
   });
 });

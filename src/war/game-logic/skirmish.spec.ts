@@ -3,25 +3,22 @@ import { skirmish, cardlessPlayersError } from './skirmish';
 
 describe('Skirmish resolution', () => {
   test('Should return the winner of a 1-player game correctly.', () => {
-    const playerA: Player = { name: 'Player A', hand: [] };
-    acceptCard({ suit: 1, rank: 1 }, playerA);
+    const playerA: Player = { name: 'Player A', hand: [{ suit: 1, rank: 1, owner: 'Player A' }] };
 
     const result = skirmish([playerA]);
-    expect(result.resolution.winner).toEqual(playerA.name);
-    expect(result.handsAtEndOfTurn[playerA.name].length).toBe(1);
+    expect(result.nameOfWinner).toBe(playerA.name);
+    expect(result.playersAtEndOfTurn.length).toBe(1);
+    expect(result.playersAtEndOfTurn[0].hand.length).toBe(1);
   });
 
   test('Should return the winner of a conflict-free skirmish.', () => {
-    const playerA: Player = { name: 'Player A', hand: [] };
-    acceptCard({ suit: 1, rank: 1 }, playerA);
-
-    const playerB: Player = { name: 'Player B', hand: [] };
-    acceptCard({ suit: 1, rank: 2 }, playerB);
+    const playerA: Player = { name: 'Player A', hand: [{ suit: 1, rank: 1, owner: 'Player A' }] };
+    const playerB: Player = { name: 'Player B', hand: [{ suit: 1, rank: 2, owner: 'Player B' }] };
 
     const result = skirmish([playerA, playerB]);
-    expect(result.resolution.winner).toEqual(playerB.name);
-    expect(result.handsAtEndOfTurn[playerA.name].length).toBe(0);
-    expect(result.handsAtEndOfTurn[playerB.name].length).toBe(2);
+    expect(result.nameOfWinner).toBe(playerB.name);
+    expect(result.playersAtEndOfTurn[0].hand.length).toBe(0);
+    expect(result.playersAtEndOfTurn[1].hand.length).toBe(2);
   });
 
   test('Should move to a conflict if two players tie in a skirmish.', () => {
@@ -41,8 +38,9 @@ describe('Skirmish resolution', () => {
     acceptCard({ suit: 2, rank: 3 }, playerB);
 
     const result = skirmish([playerA, playerB]);
-    expect(result.resolution.winner).toEqual(playerA.name);
-    expect(result.handsAtEndOfTurn[playerA.name].length).toBe(6);
+    expect(result.nameOfWinner).toBe(playerA.name);
+    expect(result.playersAtEndOfTurn[0].hand.length).toBe(6);
+    expect(result.playersAtEndOfTurn[1].hand.length).toBe(0);
   });
 
   test('Should throw if given a roster of card-less players (somehow).', () => {
