@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import { isTurnRecord } from '../record';
-import { takeTurns } from '../turn-taking';
+import { takeTurns } from '../take-turns';
 import { isPositiveWholeNumber } from '../validation';
 
 export const handlePostTakeTurns = (request: Request, response: Response) => {
   const turnsToTake = +request.query.turns;
-
   if (!isPositiveWholeNumber(turnsToTake)) {
     return response.status(500).send({ error: 'Turns to Take must be a positive integer.' });
   }

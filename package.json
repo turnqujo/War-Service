@@ -5,7 +5,6 @@
   "main": "index.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "cmd:war": "ts-node src/war/war.cmd.ts",
     "prettier": "prettier --config ./.prettierrc --write src/**/*.ts",
     "test": "jest"
   },

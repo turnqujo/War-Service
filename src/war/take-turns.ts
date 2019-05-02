@@ -21,25 +21,6 @@ export const takeTurns = (initialTurn: TurnRecord, turnsToTake: number, seed?: s
       return completedTurns;
     }
   }
-  return completedTurns;
-};
-
-export const takeTurnsToCompletion = (initialTurn: TurnRecord, seed?: string): TurnRecord[] => {
-  if (initialTurn.gameCompleted) {
-    throw 'Game is already completed.';
-  }
-
-  const completedTurns: TurnRecord[] = [initialTurn];
-  let gameCompleted = false;
-  while (!gameCompleted) {
-    const roster = JSON.parse(JSON.stringify(completedTurns[completedTurns.length - 1].playersAtEndOfTurn));
-    const result = skirmish(roster, seed);
-    completedTurns.push(result);
-
-    if (result.gameCompleted) {
-      break;
-    }
-  }
 
   return completedTurns;
 };
