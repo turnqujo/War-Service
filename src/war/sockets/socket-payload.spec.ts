@@ -12,7 +12,16 @@ describe('Stream Game Message Type Guard', () => {
   });
 
   test('Should return false if the object is not a valid stream game message.', () => {
-    const subject: any = { foo: 7, bar: 'asdf' };
-    expect(isStreamGameMessage(subject)).toBe(false);
+    const badData = [
+      'I am some sort of data which is totally not what is expected - someone is just having fun!',
+      {
+        suits: 4,
+        ranks: 13,
+        players: 2,
+        seed: 'Hello, websocket!',
+        unknownProp: 1234567890
+      }
+    ];
+    badData.forEach((bad: any) => expect(isStreamGameMessage(bad)).toBe(false));
   });
 });

@@ -5,5 +5,10 @@ export interface StreamGameMessage {
   seed?: string;
 }
 
+// NOTE: Does not allow for objects with extra properties
 export const isStreamGameMessage = (object: any): object is StreamGameMessage =>
-  'suits' in object && 'ranks' in object && 'players' in object;
+  typeof object === 'object' &&
+  Object.keys(object).length === 4 &&
+  'suits' in object &&
+  'ranks' in object &&
+  'players' in object;
