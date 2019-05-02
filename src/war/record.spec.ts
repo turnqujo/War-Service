@@ -12,7 +12,7 @@ describe('Game Record Type Guard', () => {
     expect(isGameRecord(subject)).toBe(true);
   });
 
-  test('Should return false if the object is not a valid turn record.', () => {
+  test('Should return false if the object is not a valid game record.', () => {
     const subject: any = {
       foo: 7,
       bar: 'asdf',

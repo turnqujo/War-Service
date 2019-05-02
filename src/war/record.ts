@@ -24,9 +24,7 @@ export enum TurnType {
 }
 
 export const isGameRecord = (object: any): object is GameRecord =>
-  'numberOfRanks' in object &&
-  'numberOfSuits' in object &&
-  'turnRecords' in object;
+  'numberOfRanks' in object && 'numberOfSuits' in object && 'turnRecords' in object;
 
 export const isTurnRecord = (object: any): object is TurnRecord =>
   'gameCompleted' in object &&

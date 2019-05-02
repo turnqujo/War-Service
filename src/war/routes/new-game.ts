@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { createGame } from '../create-game';
-import { validateWarOptions } from "../options-validation";
+import { validateWarOptions } from '../options-validation';
 
 export interface NewGameRequestBody {
   suits: number;

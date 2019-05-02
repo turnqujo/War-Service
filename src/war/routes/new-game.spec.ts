@@ -6,7 +6,8 @@ import { isGameRecord } from '../record';
 
 describe('POST on /, create a new game using the given options.', () => {
   const fakeApp = express()
-    .use(bodyParser.json()).use(warRouter);
+    .use(bodyParser.json())
+    .use(warRouter);
 
   test('Should return a bad request if given invalid options.', () =>
     supertest(fakeApp)
