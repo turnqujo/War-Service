@@ -1,5 +1,5 @@
-import { Card } from '../card/card';
-import { acceptCard, playCard, Player, acceptCards } from './player';
+import { Card } from './card';
+import { acceptCard, acceptCards, playCard, Player } from './player';
 
 describe('The player', () => {
   test('Should take ownership of accepted cards if they do not already have an owner.', () => {

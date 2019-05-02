@@ -1,4 +1,4 @@
-import { isPositiveWholeNumber } from '../../common/validation/validation';
+import { isPositiveWholeNumber } from './validation';
 
 export enum WarOptionValidationError {
   invalidSuitCount = 'Number of suits must be a positive integer.',
@@ -7,25 +7,21 @@ export enum WarOptionValidationError {
   cannotSplitDeckEvenly = 'Cannot split deck of size (suits * ranks) evenly across the desired number of players.'
 }
 
-export const validateWarOptions = (
-  numberOfSuits: number,
-  numberOfRanks: number,
-  numberOfPlayers: number
-): WarOptionValidationError => {
-  if (!isPositiveWholeNumber(numberOfSuits)) {
+export const validateWarOptions = (suits: number, ranks: number, playerCount: number): WarOptionValidationError => {
+  if (!isPositiveWholeNumber(suits)) {
     return WarOptionValidationError.invalidSuitCount;
   }
 
-  if (!isPositiveWholeNumber(numberOfRanks)) {
+  if (!isPositiveWholeNumber(ranks)) {
     return WarOptionValidationError.invalidRankCount;
   }
 
-  if (!isPositiveWholeNumber(numberOfPlayers)) {
+  if (!isPositiveWholeNumber(playerCount)) {
     return WarOptionValidationError.invalidPlayerCount;
   }
 
-  const numCards = numberOfSuits * numberOfRanks;
-  if (numCards % numberOfPlayers !== 0) {
+  const numCards = suits * ranks;
+  if (numCards % playerCount !== 0) {
     return WarOptionValidationError.cannotSplitDeckEvenly;
   }
 

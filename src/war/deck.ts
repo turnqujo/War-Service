@@ -1,5 +1,5 @@
 import * as random from 'seedrandom';
-import { Card } from '../card/card';
+import { Card } from './card';
 
 export const createDeck = (numberOfSuits: number, numberOfRanks: number): Card[] => {
   const newDeck = [];

@@ -1,5 +1,5 @@
 import { checkForVictory } from './victory-logic';
-import { Player } from '../../common/player/player';
+import { Player } from './player';
 
 describe('Victory condition logic for War', () => {
   test('Should return true if there is only one player left', () => {

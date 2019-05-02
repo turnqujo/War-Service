@@ -1,7 +1,7 @@
-import { createGame } from './game-logic/create-game';
-import { takeTurnsToCompletion } from './game-logic/turn-taking';
-import { GameRecord } from './record/record';
-import { validateWarOptions } from './validation/options-validation';
+import { createGame } from './create-game';
+import { validateWarOptions } from './options-validation';
+import { GameRecord } from './record';
+import { takeTurnsToCompletion } from './turn-taking';
 
 export enum WarErrors {
   missingCards = 'Missing cards'

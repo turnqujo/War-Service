@@ -1,5 +1,5 @@
-import { Player, acceptCard } from '../../common/player/player';
-import { skirmish, cardlessPlayersError } from './skirmish';
+import { acceptCard, Player } from './player';
+import { cardlessPlayersError, skirmish } from './skirmish';
 
 describe('Skirmish resolution', () => {
   test('Should return the winner of a 1-player game correctly.', () => {

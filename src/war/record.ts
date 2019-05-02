@@ -1,11 +1,11 @@
-import { Card } from '../../common/card/card';
-import { Player } from '../../common/player/player';
+import { Card } from './card';
+import { Player } from './player';
 
 export interface GameRecord {
   numberOfRanks: number;
   numberOfSuits: number;
-  seed?: string;
   turnRecords: TurnRecord[];
+  seed?: string;
 }
 
 export interface TurnRecord {
@@ -22,6 +22,11 @@ export enum TurnType {
   skirmish = 'skirmish',
   conflict = 'conflict'
 }
+
+export const isGameRecord = (object: any): object is GameRecord =>
+  'numberOfRanks' in object &&
+  'numberOfSuits' in object &&
+  'turnRecords' in object;
 
 export const isTurnRecord = (object: any): object is TurnRecord =>
   'gameCompleted' in object &&

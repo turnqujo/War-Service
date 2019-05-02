@@ -1,5 +1,5 @@
-import { playCard, Player, acceptCard } from '../player/player';
 import { Card } from './card';
+import { acceptCard, playCard, Player } from './player';
 
 export const notEnoughCardsError = 'Not enough cards in the given deck.';
 export const dealCardsToPlayers = (deck: Card[], players: Player[], cardsPerPlayer: number): void => {

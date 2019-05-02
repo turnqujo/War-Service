@@ -1,4 +1,4 @@
-import { Card } from '../../common/card/card';
+import { Card } from './card';
 
 export const findWinningCards = (playedCards: Card[]): Card[] =>
   playedCards

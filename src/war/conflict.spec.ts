@@ -1,6 +1,6 @@
-import { Card } from '../../common/card/card';
-import { Player, acceptCard } from '../../common/player/player';
-import { resolveConflict, noContendersError } from './conflict';
+import { Card } from './card';
+import { noContendersError, resolveConflict } from './conflict';
+import { acceptCard, Player } from './player';
 
 describe('Conflict resolution', () => {
   test('Should throw if given an empty array of contenders.', () =>

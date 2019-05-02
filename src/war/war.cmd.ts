@@ -1,6 +1,6 @@
 import * as readline from 'readline';
 import { playWar } from './war';
-import { isPositiveWholeNumber } from '../common/validation/validation';
+import { isPositiveWholeNumber } from './validation';
 
 let rl = readline.createInterface({
   input: process.stdin,

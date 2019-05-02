@@ -1,6 +1,6 @@
-import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import warRouter from './war/router/war.router';
+import * as express from 'express';
+import warRouter from './war/routes';
 
 express()
   .use(bodyParser.json())

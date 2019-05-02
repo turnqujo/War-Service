@@ -1,5 +1,5 @@
-import { isPositiveWholeNumber } from '../../common/validation/validation';
-import { TurnRecord } from '../record/record';
+import { isPositiveWholeNumber } from './validation';
+import { TurnRecord } from './record';
 import { skirmish } from './skirmish';
 
 export const takeTurns = (initialTurn: TurnRecord, turnsToTake: number, seed?: string): TurnRecord[] => {

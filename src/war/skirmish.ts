@@ -1,10 +1,10 @@
-import { Card } from '../../common/card/card';
-import { playCardsIntoPool } from '../../common/card/card-actions';
-import { acceptCards, Player } from '../../common/player/player';
-import { findPlayerByName } from '../../common/player/roster';
-import { TurnRecord, TurnType } from '../record/record';
+import { Card } from './card';
+import { playCardsIntoPool } from './card-actions';
 import { findLosingCards, findWinningCards } from './card-sorting';
 import { resolveConflict } from './conflict';
+import { acceptCards, Player } from './player';
+import { TurnRecord, TurnType } from './record';
+import { findPlayerByName } from './roster';
 import { checkForVictory } from './victory-logic';
 
 export const cardlessPlayersError = 'No players have enough cards to continue.';

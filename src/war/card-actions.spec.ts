@@ -1,6 +1,6 @@
-import { createDeck } from '../deck/deck';
-import { Player } from '../player/player';
 import { dealCardsToPlayers, notEnoughCardsError } from './card-actions';
+import { createDeck } from './deck';
+import { Player } from './player';
 
 describe('Deal cards to players', () => {
   test('Should deal cards out to players', () => {

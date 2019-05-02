@@ -1,9 +1,9 @@
 import * as random from 'seedrandom';
-import { Card } from '../../common/card/card';
-import { playCardsIntoPool } from '../../common/card/card-actions';
-import { Player } from '../../common/player/player';
-import { findPlayerByName } from '../../common/player/roster';
+import { Card } from './card';
+import { playCardsIntoPool } from './card-actions';
 import { findLosingCards, findWinningCards } from './card-sorting';
+import { Player } from './player';
+import { findPlayerByName } from './roster';
 
 export interface ConflictOutcome {
   winner: Player;

@@ -1,5 +1,5 @@
+import { Card } from './card';
 import { findWinningCards } from './card-sorting';
-import { Card } from '../../common/card/card';
 
 describe('Determining winning cards logic for War', () => {
   test('Should return a winning card out of a set of non-tied cards', () => {

@@ -1,6 +1,6 @@
-import { TurnRecord, TurnType } from '../record/record';
+import { Player } from './player';
+import { TurnRecord, TurnType } from './record';
 import { takeTurns, takeTurnsToCompletion } from './turn-taking';
-import { Player } from '../../common/player/player';
 
 describe('Batch turn taking', () => {
   test('Should throw if given invalid input.', () => {
