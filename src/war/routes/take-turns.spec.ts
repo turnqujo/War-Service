@@ -16,7 +16,7 @@ describe('POST on /next, calculate and return the next turns based off of a give
       .post('/next?turns=invalid-input')
       .then((response: supertest.Response) => {
         expect(response.status).toBe(500);
-        expect(response.body.error).toBeTruthy();
+        expect(typeof response.body.error).toBe('string');
       }));
 
   test('Should return a bad request when given an invalid body', () =>
@@ -26,7 +26,7 @@ describe('POST on /next, calculate and return the next turns based off of a give
       .send({ foo: 'some garbage' })
       .then((response: supertest.Response) => {
         expect(response.status).toBe(500);
-        expect(response.body.error).toBeTruthy();
+        expect(typeof response.body.error).toBe('string');
       }));
 
   test('Should return a bad request when given an invalid number of turns to advance.', async () => {

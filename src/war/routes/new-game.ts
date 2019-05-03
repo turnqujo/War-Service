@@ -1,20 +1,16 @@
 import { Request, Response } from 'express';
 import { createGame } from '../create-game';
-import { validateWarConfiguration } from '../validation/war-options';
-
-export interface NewGameRequestBody {
-  suits: number;
-  ranks: number;
-  players: number;
-  seed?: string;
-}
+import { validateWarConfiguration, isWarConfiguration } from '../validation/war-options';
 
 export const handlePostNewGame = (request: Request, response: Response) => {
+  if (!isWarConfiguration(request.body)) {
+    return response.status(500).send({ error: 'Body is not of the expected type.' });
+  }
+
   const suits = request.body.suits;
   const ranks = request.body.ranks;
   const players = request.body.players;
   const seed = request.body.seed;
-
   const error = validateWarConfiguration(suits, ranks, players);
   return error !== null
     ? response.status(500).send({ error })

@@ -20,6 +20,7 @@ export const skirmish = (roster: Player[], seed?: string): TurnRecord => {
     // Multiple cards were played, but only one winner
     const uncontestedWinner = findPlayerByName(roster, winningCards[0].playedBy);
     acceptCards(playedCards, uncontestedWinner);
+
     return {
       type: TurnType.skirmish,
       playedCards,
@@ -38,6 +39,7 @@ export const skirmish = (roster: Player[], seed?: string): TurnRecord => {
     const losingCards = findLosingCards(playedCards, winningCards);
     const winnings = conflictOutcome.winnings.concat(losingCards);
     acceptCards(winnings, conflictOutcome.winner);
+
     return {
       type: TurnType.conflict,
       playedCards,
