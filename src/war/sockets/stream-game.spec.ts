@@ -1,6 +1,7 @@
-import { GameRecord, isGameRecord, isTurnRecord } from '../record';
+import { GameRecord } from '../record';
+import { isGameRecord, isTurnRecord } from '../validation/record';
+import { WarConfiguration } from '../validation/war-options';
 import { StreamedTurnRecord, streamGame } from './stream-game';
-import { StreamGameMessage } from './socket-payload';
 
 describe('Streaming a game through a websocket.', () => {
   test('Should return an error if given invalid options.', () => {
@@ -37,7 +38,7 @@ describe('Streaming a game through a websocket.', () => {
       send: jest.fn((data: string) => results.push(JSON.parse(data) as GameRecord | StreamedTurnRecord))
     };
 
-    const data: StreamGameMessage = {
+    const data: WarConfiguration = {
       suits: 4,
       ranks: 13,
       players: 2,

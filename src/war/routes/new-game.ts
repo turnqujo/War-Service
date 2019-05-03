@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { createGame } from '../create-game';
-import { validateWarOptions } from '../options-validation';
+import { validateWarConfiguration } from '../validation/war-options';
 
 export interface NewGameRequestBody {
   suits: number;
@@ -15,7 +15,7 @@ export const handlePostNewGame = (request: Request, response: Response) => {
   const players = request.body.players;
   const seed = request.body.seed;
 
-  const error = validateWarOptions(suits, ranks, players);
+  const error = validateWarConfiguration(suits, ranks, players);
   return error !== null
     ? response.status(500).send({ error })
     : response.status(200).send(createGame(suits, ranks, players, seed));

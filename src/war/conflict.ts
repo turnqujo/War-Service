@@ -11,6 +11,8 @@ export interface ConflictOutcome {
 }
 
 export const noContendersError = 'No contenders given.';
+
+// NOTE: A "Conflict" refers to a "War" in the original definition of the game. Conflict was chosen to reduce confusion.
 export const resolveConflict = (contestedCards: Card[], contenders: Player[], seed?: string): ConflictOutcome => {
   if (contenders.length === 0) {
     throw noContendersError;

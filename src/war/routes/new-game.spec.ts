@@ -2,7 +2,7 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as supertest from 'supertest';
 import warRouter from '.';
-import { isGameRecord } from '../record';
+import { isGameRecord } from '../validation/record';
 
 describe('POST on /, create a new game using the given options.', () => {
   const fakeApp = express()

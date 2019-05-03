@@ -1,20 +1,19 @@
 import { createGame } from '../create-game';
-import { validateWarOptions } from '../options-validation';
 import { TurnRecord } from '../record';
 import { skirmish } from '../skirmish';
-import { isStreamGameMessage, StreamGameMessage } from './socket-payload';
+import { isWarConfiguration, validateWarConfiguration, WarConfiguration } from '../validation/war-options';
 
 export interface StreamedTurnRecord {
   turnNumber: number;
   thisTurn: TurnRecord;
 }
 
-export const streamGame = (socket: { send: (data: any) => void }, data: StreamGameMessage) => {
-  if (!isStreamGameMessage(data)) {
+export const streamGame = (socket: { send: (data: any) => void }, data: WarConfiguration) => {
+  if (!isWarConfiguration(data)) {
     return socket.send(JSON.stringify({ error: 'Message is not of the expected type.' }));
   }
 
-  const error = validateWarOptions(data.suits, data.ranks, data.players);
+  const error = validateWarConfiguration(data.suits, data.ranks, data.players);
   if (error !== null) {
     return socket.send(JSON.stringify({ error }));
   }

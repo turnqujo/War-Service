@@ -1,5 +1,5 @@
 import { createGame } from './create-game';
-import { WarOptionValidationError } from './options-validation';
+import { WarOptionValidationError } from './validation/war-options';
 
 describe('Creating a new game of War', () => {
   test('Should not accept invalid input', () => {

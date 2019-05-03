@@ -3,7 +3,8 @@ import * as express from 'express';
 import * as supertest from 'supertest';
 import warRouter from '.';
 import { Player } from '../player';
-import { isTurnRecord, TurnRecord, TurnType } from '../record';
+import { TurnRecord, TurnType } from '../record';
+import { isTurnRecord } from '../validation/record';
 
 describe('POST on /next, calculate and return the next turns based off of a given one.', () => {
   const fakeApp = express()

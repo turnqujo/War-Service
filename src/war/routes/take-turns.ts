@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { isTurnRecord } from '../record';
+import { isTurnRecord } from '../validation/record';
 import { takeTurns } from '../take-turns';
-import { isPositiveWholeNumber } from '../validation';
+import { isPositiveWholeNumber } from '../validation/validation';
 
 export const handlePostTakeTurns = (request: Request, response: Response) => {
   const turnsToTake = +request.query.turns;

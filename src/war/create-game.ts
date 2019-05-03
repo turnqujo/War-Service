@@ -1,11 +1,11 @@
 import { dealCardsToPlayers } from './card-actions';
 import { createDeck, shuffle } from './deck';
-import { validateWarOptions } from './options-validation';
 import { GameRecord, TurnType } from './record';
 import { createRoster } from './roster';
+import { validateWarConfiguration } from './validation/war-options';
 
 export const createGame = (suits: number, ranks: number, playerCount: number, seed?: string): GameRecord => {
-  const error = validateWarOptions(suits, ranks, playerCount);
+  const error = validateWarConfiguration(suits, ranks, playerCount);
   if (error !== null) {
     throw error;
   }

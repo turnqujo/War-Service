@@ -1,4 +1,5 @@
-import { isTurnRecord, TurnType, isGameRecord } from './record';
+import { TurnType } from '../record';
+import { isGameRecord, isTurnRecord } from './record';
 
 describe('Game Record Type Guard', () => {
   test('Should return true if the object is a valid game record.', () => {

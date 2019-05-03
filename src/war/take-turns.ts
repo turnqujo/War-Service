@@ -1,6 +1,6 @@
-import { isPositiveWholeNumber } from './validation';
 import { TurnRecord } from './record';
 import { skirmish } from './skirmish';
+import { isPositiveWholeNumber } from './validation/validation';
 
 export const takeTurns = (initialTurn: TurnRecord, turnsToTake: number, seed?: string): TurnRecord[] => {
   if (!isPositiveWholeNumber(turnsToTake)) {
