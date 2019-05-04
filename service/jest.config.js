@@ -8,8 +8,7 @@ module.exports = {
     '**/*.ts',
     '!**/node_modules/**',
     '!**/dist/**',
-    '!**/index.ts',
-    '!**/*.cmd.ts'
+    '!**/index.ts'
   ],
   coverageReporters: ['text']
 };
