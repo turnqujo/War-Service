@@ -1,18 +1,9 @@
-## Service ##
-# dependencies
-/service/node_modules/
+**/node_modules/
+**/coverage/
 
-# testing
-/service/coverage
-
-## Static ##
 # dependencies
-/static/node_modules
 /static/.pnp
 /static/.pnp.js
-
-# testing
-/static/coverage
 
 # production
 /static/build
