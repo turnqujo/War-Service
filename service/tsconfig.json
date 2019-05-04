@@ -10,6 +10,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "pretty": true,
-    "target": "es3"
+    "target": "es5"
   }
 }

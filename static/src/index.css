@@ -1,3 +1,9 @@
+@import './reset.css';
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -9,4 +15,11 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+button {
+  border: 0;
+  font-family: inherit;
+  font-size: 100%;
+  padding: 0;
 }
