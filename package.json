@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "prettier": "prettier --config ../.prettierrc --write src/**/*.ts",
+    "prettier": "prettier --config ./.prettierrc --write src/**/*.ts",
     "test": "jest"
   },
   "repository": {

@@ -7,6 +7,7 @@ import { handlePostTakeTurns } from './take-turns';
 const warRouter = express.Router();
 warRouter.post('/', handlePostNewGame);
 warRouter.post('/next', handlePostTakeTurns);
+export default warRouter;
 
 export const startApiServer = (port: number) =>
   express()
