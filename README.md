@@ -75,7 +75,3 @@ This means that both players 2 and 3 are able to put their last cards in the pri
 #### Resolution
 
 In order to break the tie, I wrote in a simple mechanism which will select a winner at random from the war participants. In such a case, one player will be out of the game, while the winner will have won their cards, allowing the game to continue.
-
-## What's War Logic?
-
-War logic is a file containing functions which were pretty War-specific. I noticed it could be possible to reuse much of the code in this project for a totally different card game, as well as other variations of War. Such games and variations would be "drivers", and could share these functions if it made sense. `lib/common-actions` is a similar idea, but with more generic operations which could be relevant to all sorts of card games.
