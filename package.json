@@ -29,7 +29,7 @@
     "@types/ws": "^6.0.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "jest": "^24.7.1",
     "prettier": "^1.17.0",
     "seedrandom": "^3.0.1",
